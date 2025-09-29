@@ -2,10 +2,12 @@
 declare(strict_types=1);
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Subscriber extends Model
 {
+    use HasFactory;
     public const VALID_GENDERS = ['male', 'female', 'other'];
     public const VALID_OCCUPATIONS = ['student', 'employed', 'unemployed', 'retired', 'other'];
     protected $table = 'subscribers';

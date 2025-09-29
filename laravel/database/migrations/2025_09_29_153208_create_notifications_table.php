@@ -16,7 +16,6 @@ return new class extends Migration
     {
         Schema::create('notifications', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('publisher_id')->constrained('publishers')->onDelete('cascade');
             $table->foreignId('publisher_list_id')->constrained('publisher_lists')->onDelete('cascade');
             $table->enum('type', Notification::VALID_TYPES);
             $table->string('title');

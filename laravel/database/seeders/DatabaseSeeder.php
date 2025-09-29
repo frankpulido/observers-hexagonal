@@ -1,8 +1,9 @@
 <?php
-
+declare(strict_types=1);
 namespace Database\Seeders;
 
 use App\Models\User;
+use Dflydev\DotAccessData\Data;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -13,11 +14,22 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        User::create([
+            'username' => 'frankpulido',
+            'email' => 'frankpulido@me.com',
+            'mobile' => '653343353',
+            'role' => 'publisher',
+            'password' => 'password',
+        ]);
+        
+        User::factory()->count(10)->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        $this->call([
+            PublisherSeeder::class,
+            SubscriberSeeder::class,
+            PublisherListSeeder::class,
+            SubscriptionSeeder::class,
+            NotificationSeeder::class,
         ]);
     }
 }
