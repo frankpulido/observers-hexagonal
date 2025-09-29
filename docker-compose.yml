@@ -1,7 +1,7 @@
 services:
   mysql:
     image: mysql:8.0
-    container_name: notifier-mysql
+    container_name: hexagonal-mysql
     command: --default-authentication-plugin=mysql_native_password
     restart: unless-stopped
     environment:
@@ -23,7 +23,7 @@ services:
     build:
       context: ./php
       dockerfile: Dockerfile
-    container_name: notifier-php
+    container_name: hexagonal-php
     restart: unless-stopped
     volumes:
       - ./laravel:/var/www/html
@@ -33,7 +33,7 @@ services:
 
   nginx:
     image: nginx:alpine
-    container_name: notifier-nginx
+    container_name: hexagonal-nginx
     restart: unless-stopped
     ports:
       - "8988:80"
@@ -46,7 +46,7 @@ services:
   laravel:
     build:
       context: ./laravel
-    container_name: notifier-laravel
+    container_name: hexagonal-laravel
     restart: unless-stopped
     environment:
       APP_ENV: ${APP_ENV:-local}
@@ -72,7 +72,7 @@ services:
   react:
     build:
       context: ./react
-    container_name: notifier-react
+    container_name: hexagonal-react
     restart: unless-stopped
     ports:
       - "8989:5173"
