@@ -15,6 +15,8 @@ return new class extends Migration
         Schema::create('subscribers', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->string('subscriber_email')->unique();
+            $table->string('subscriber_mobile')->unique();
             $table->string('first_name');
             $table->string('last_name');
             $table->date('date_of_birth')->nullable();
