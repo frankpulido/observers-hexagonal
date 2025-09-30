@@ -22,5 +22,16 @@ class PublisherSeeder extends Seeder
             'postal_code' => '08001',
             'is_active' => true,
         ]);
+
+        Publisher::create([
+            'user_id' => 2,
+            'name' => 'Doe Legal Counselors',
+            'cif' => 'C987654321',
+            'address' => '456 Global Ave, Metropolis, BCN',
+            'city' => 'Barcelona',
+            'postal_code' => '08002',
+            'max_private_subscribers_plan' => 50,
+            'is_active' => true,
+        ]);
     }
 }

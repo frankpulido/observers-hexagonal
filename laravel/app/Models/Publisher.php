@@ -16,6 +16,7 @@ class Publisher extends Model
         'address',
         'city',
         'postal_code',
+        'max_private_subscribers_plan',
         'is_active',
     ];
 
@@ -26,6 +27,7 @@ class Publisher extends Model
         'address' => 'string',
         'city' => 'string',
         'postal_code' => 'string',
+        'max_private_subscribers_plan' => 'integer',
         'is_active' => 'boolean',
     ];
 

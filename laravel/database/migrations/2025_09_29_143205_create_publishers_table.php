@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('address');
             $table->string('city');
             $table->string('postal_code', 5);
+            $table->integer('max_private_subscribers_plan')->default(0);
             $table->boolean('is_active')->default(true);
             $table->timestamps();
         });

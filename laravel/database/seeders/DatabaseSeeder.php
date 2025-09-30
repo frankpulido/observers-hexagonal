@@ -21,6 +21,14 @@ class DatabaseSeeder extends Seeder
             'role' => 'publisher',
             'password' => 'password',
         ]);
+
+        User::create([
+            'username' => 'johndoe',
+            'email' => 'johndoe@mail.com',
+            'mobile' => '654123456',
+            'role' => 'publisher',
+            'password' => 'password',
+        ]);
         
         User::factory()->count(10)->create();
 

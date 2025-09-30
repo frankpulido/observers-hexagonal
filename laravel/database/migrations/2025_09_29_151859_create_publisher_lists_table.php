@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('name');
             $table->unique(['publisher_id', 'name']);
             $table->text('description')->nullable();
+            $table->boolean('is_private')->default(false);
             $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
