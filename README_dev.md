@@ -341,7 +341,7 @@ This architecture enables **platform evolution**:
 
 ```bash
 # Your existing Laravel structure is perfect
-cd /Applications/XAMPP/xamppfiles/htdocs/laravel/observers-hexagonal/laravel
+cd /Documents/observers-hexagonal/laravel
 
 # Add hexagonal architecture
 mkdir -p src/ObserversHex/{Domain,Application,Infrastructure}
