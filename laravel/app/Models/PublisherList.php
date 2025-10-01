@@ -13,12 +13,14 @@ class PublisherList extends Model
         'publisher_id',
         'name',
         'description',
+        'is_private',
         'is_active',
     ];
 
     protected $casts = [
         'name' => 'string',
         'description' => 'string',
+        'is_private' => 'boolean',
         'is_active' => 'boolean',
     ];
 
