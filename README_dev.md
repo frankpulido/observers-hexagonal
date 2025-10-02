@@ -333,6 +333,29 @@ This architecture enables **platform evolution**:
 - **1 year**: Core services + channel microservices
 - **2 years**: Multi-cloud platform with dozens of channels
 
+```bash
+                    ┌─────────────────┐
+                    │  API Gateway    │
+                    │  (Kong/Nginx)   │
+                    └─────────┬───────┘
+                              │
+        ┌─────────────────────┼─────────────────────┐
+        │                     │                     │
+┌───────▼──────┐     ┌────────▼────────┐     ┌──────▼──────┐
+│ User Service │     │ Publisher       │     │ Notification│
+│ (Laravel)    │     │ Service         │     │ Service     │
+│ - Auth       │     │ (Django)        │     │ (Node.js)   │
+│ - Profiles   │     │ - Content mgmt  │     │ - Dispatch  │
+└──────────────┘     └─────────────────┘     └─────────────┘
+        │                     │                     │
+┌───────▼──────┐     ┌────────▼────────┐     ┌──────▼──────┐
+│ Alexa        │     │ Slack Service   │     │ Discord     │
+│ Service      │     │ (Go)            │     │ Service     │
+│ (Python)     │     │ - Hosted on GCP │     │ (Rust)      │
+│ - AWS Lambda │     └─────────────────┘     │ - Kubernetes│
+└──────────────┘                             └─────────────┘
+```
+
 **The key insight**: Architecture should evolve with understanding, not be over-engineered upfront.
 
 ---
