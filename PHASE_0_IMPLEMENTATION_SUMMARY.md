@@ -287,9 +287,10 @@ Documentation:
 
 **Immediate Actions:**
 1. Create `laravel/src/ObserversHex/` directory structure
-2. Update `composer.json` with ObserversHex namespace
-3. Implement first domain entity (Publisher)
-4. Write first domain test
+2. Update `laravel/composer.json` with ObserversHex namespace autoload
+3. Run `composer dump-autoload` in laravel/ directory
+4. Implement first domain entity (Publisher)
+5. Write first domain test
 
 **Phase 1 Goals:**
 - Domain layer foundation

@@ -89,17 +89,38 @@ Build a **platform-agnostic notification system** where:
 
 **Tasks:**
 1. Create directory structure:
+   ```bash
+   cd laravel/
+   mkdir -p src/ObserversHex/{Domain,Application,Infrastructure}
+   mkdir -p src/ObserversHex/Domain/{Publisher,Subscriber,Notification,Shared}
+   mkdir -p src/ObserversHex/Domain/Publisher/{Entities,ValueObjects,Services,Repositories}
+   mkdir -p src/ObserversHex/Application/{UseCases,DTOs,Ports}
+   mkdir -p src/ObserversHex/Infrastructure/{Laravel,Alexa,Persistence}
+   mkdir -p src/ObserversHex/Infrastructure/Laravel/{Repositories,Models}
+   ```
+   
+   **Result:**
    ```
    laravel/src/ObserversHex/
    ├── Domain/
-   │   ├── Entities/
-   │   ├── ValueObjects/
-   │   └── Services/
+   │   ├── Publisher/
+   │   │   ├── Entities/
+   │   │   ├── ValueObjects/
+   │   │   ├── Services/
+   │   │   └── Repositories/
+   │   ├── Subscriber/
+   │   ├── Notification/
+   │   └── Shared/
    ├── Application/
-   │   └── UseCases/
+   │   ├── UseCases/
+   │   ├── DTOs/
+   │   └── Ports/
    └── Infrastructure/
-       ├── Repositories/
-       └── Adapters/
+       ├── Laravel/
+       │   ├── Repositories/
+       │   └── Models/
+       ├── Alexa/
+       └── Persistence/
    ```
 
 2. Implement domain entities:
@@ -118,12 +139,22 @@ Build a **platform-agnostic notification system** where:
    - SubscriberRepositoryInterface
    - NotificationRepositoryInterface
 
-5. Update composer.json autoload:
+5. Update `laravel/composer.json` autoload:
    ```json
-   "psr-4": {
-       "App\\": "app/",
-       "ObserversHex\\": "src/ObserversHex/"
+   {
+       "autoload": {
+           "psr-4": {
+               "App\\": "app/",
+               "ObserversHex\\": "src/ObserversHex/"
+           }
+       }
    }
+   ```
+   
+   Then run:
+   ```bash
+   cd laravel/
+   composer dump-autoload
    ```
 
 **Success Metrics:**

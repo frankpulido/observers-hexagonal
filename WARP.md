@@ -53,26 +53,65 @@ Instead of complex OAuth flows, users simply provide usernames for services:
 
 ```
 observers-hexagonal/
-├── laravel/                    # Laravel backend application
-│   ├── app/
-│   │   ├── Models/            # Existing Laravel models (become adapters)
-│   │   │   ├── User.php       # Roles: admin, publisher, subscriber
-│   │   │   ├── Publisher.php  # Business entity
-│   │   │   ├── PublisherList.php  # Content categories (is_private flag)
-│   │   │   ├── Subscriber.php # User profiles
-│   │   │   ├── Subscription.php # Links subscribers to publisher lists
-│   │   │   └── Notification.php # Multi-type notifications
-│   │   └── Observers/
-│   │       └── NotificationObserver.php  # Event-driven foundation
-│   └── src/ObserversHex/      # NEW: Hexagonal architecture (to be created)
-│       ├── Domain/            # Pure business logic (no Laravel)
-│       ├── Application/       # Use cases (framework agnostic)
-│       └── Infrastructure/    # Adapters (Laravel integration)
-├── react/                     # React frontend
-├── php/                       # PHP Docker config
-├── docker-compose.yml
-└── README_dev.md             # Detailed architecture documentation
+├── laravel/                              # Docker container for Laravel
+│   ├── app/                              # Laravel framework (existing - untouched)
+│   │   ├── Models/                       # Existing models (become Infrastructure adapters)
+│   │   │   ├── User.php                  # Roles: admin, publisher, subscriber
+│   │   │   ├── Publisher.php             # Business entity
+│   │   │   ├── PublisherList.php         # Content categories (is_private flag)
+│   │   │   ├── Subscriber.php            # User profiles
+│   │   │   ├── Subscription.php          # Links subscribers to publisher lists
+│   │   │   └── Notification.php          # Multi-type notifications
+│   │   ├── Http/Controllers/
+│   │   │   └── SubscriberController.php
+│   │   ├── Observers/
+│   │   │   └── NotificationObserver.php  # Event-driven foundation
+│   │   └── Providers/
+│   │       └── AppServiceProvider.php
+│   │
+│   ├── src/ObserversHex/                 # NEW: Hexagonal architecture (to be created)
+│   │   ├── Domain/                       # Pure business logic (zero Laravel dependencies)
+│   │   │   ├── Publisher/
+│   │   │   │   ├── Entities/
+│   │   │   │   ├── ValueObjects/
+│   │   │   │   ├── Services/
+│   │   │   │   └── Repositories/
+│   │   │   ├── Subscriber/
+│   │   │   ├── Notification/
+│   │   │   └── Shared/
+│   │   ├── Application/                  # Use cases (framework agnostic)
+│   │   │   ├── UseCases/
+│   │   │   ├── DTOs/
+│   │   │   └── Ports/
+│   │   └── Infrastructure/               # Adapters
+│   │       ├── Laravel/                  # Laravel-specific adapters
+│   │       │   ├── Repositories/
+│   │       │   └── Models/
+│   │       ├── Alexa/                    # Alexa channel adapter
+│   │       └── Persistence/
+│   │
+│   ├── composer.json                     # Update: "ObserversHex\\": "src/ObserversHex/"
+│   └── Dockerfile
+│
+├── react/                                # Docker container for React frontend
+│   ├── src/
+│   ├── package.json
+│   └── Dockerfile
+│
+├── php/                                  # Docker container for PHP
+│   └── Dockerfile
+│
+├── nginx/                                # Docker container for Nginx
+│   └── conf.d/
+│
+└── docker-compose.yml                    # Multi-container orchestration
 ```
+
+**Key Points:**
+- `laravel/` is a **Docker container folder**, not just the Laravel app
+- `src/ObserversHex/` sits **inside laravel/** but **outside app/** (beside Laravel framework)
+- Pure business logic in `src/` has **zero Laravel dependencies**
+- Existing `app/Models/` become Infrastructure adapters
 
 ---
 
