@@ -1,0 +1,130 @@
+0. Laravel framework architecture for DDD and Hexagonal
+
+[ v2 ] Project Notifier Publisher/Subscriber
+
+Domains - Application - Infraestructure
+
+We need to add scaffolding that decouples business rules from framework details. It allows to change persistence, test domain logic easily, and avoid leaking DB models into domain or DTOs into controllers.
+
+In DDD you usually see something like this under a domain :
+
+Domain/
+ └── Publisher/
+      ├── Entities/        // Aggregate roots, entities, value objects
+      ├── Events/          // Domain events
+      ├── Repositories/    // Interfaces for persistence (ports)
+      ├── Services/        // Domain services (pure business logic)
+      └── Ports/           // (Optional) interfaces to external systems like buses/notifications
+
+Repositories
+
+Ports
+
+Some teams put
+
+👉 Best practice:
+
+If the project is small → keep it simple (
+
+For our project, a clean DDD-style foldering could look like this:
+
+app/
+  Domain/
+    Publisher/
+      Entities/
+        Publisher.php
+      Events/
+        EventPublished.php
+      Services/
+        PublishService.php
+    Subscriber/
+      Entities/
+        Subscriber.php
+      Events/
+        EventReceived.php
+      Services/
+        SubscribeService.php
+    Shared/
+      ValueObjects/
+        EventId.php
+        Payload.php
+  Application/
+    Publisher/
+      PublishEvent/
+        PublishEventHandler.php    # orchestrates publishing
+    Subscriber/
+      HandleEvent/
+        HandleEventHandler.php     # orchestrates subscriber handling
+  Infrastructure/
+    Messaging/
+      Adapters/
+        RedisPublisher.php
+        RedisSubscriber.php
+        KafkaPublisher.php
+        KafkaSubscriber.php
+
+Recommended add-on structure for scalability and broadening scope
+
+Since we want scalability + future scope, we’ll scaffold with
+
+Here’s the
+
+app/
+ ├── Domain/                        # Core business rules, pure PHP, no Laravel deps
+ │    ├── Publisher/
+ │    │    ├── Entities/            # Aggregate roots, value objects
+ │    │    ├── Events/              # Domain events (e.g. MessagePublished)
+ │    │    ├── Repositories/        # Persistence contracts (PublisherRepositoryInterface)
+ │    │    ├── Services/            # Business services (pure logic)
+ │    │    └── Ports/               # External system contracts (EventBus, Broker)
+ │    │
+ │    └── Subscriber/
+ │         ├── Entities/
+ │         ├── Events/
+ │         ├── Repositories/
+ │         ├── Services/
+ │         └── Ports/               # e.g. SubscriberNotificationInterface
+ │
+ ├── Application/                   # Use cases (application services)
+ │    ├── Publisher/
+ │    │    └── Commands/            # e.g. PublishMessageHandler
+ │    └── Subscriber/
+ │         └── Commands/            # e.g. SubscribeToTopicHandler
+ │
+ ├── Infrastructure/                # Adapters to external systems
+ │    ├── Persistence/
+ │    │    ├── MySQL/
+ │    │    │    ├── PublisherRepository.php
+ │    │    │    └── SubscriberRepository.php
+ │    │    └── Migrations/          # optional, can stay in database/migrations
+ │    │
+ │    ├── MessageBroker/
+ │    │    ├── RabbitMQPublisherEventBus.php
+ │    │    ├── RedisPublisherEventBus.php
+ │    │    └── ...
+ │    │
+ │    └── Notifications/
+ │         └── WebSocketSubscriberNotification.php
+ │
+ └── Http/                          # Stays as usual in Laravel
+      ├── Controllers/
+      ├── Requests/
+      └── Resources/
+
+Reasoning
+
+Domain/
+
+Application/
+
+Infrastructure/
+
+Http/
+
+This way:
+
+You can switch MySQL → Mongo or RabbitMQ → Redis without touching
+
+Application
+
+Infrastructure

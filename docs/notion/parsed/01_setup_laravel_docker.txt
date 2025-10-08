@@ -1,0 +1,225 @@
+Set Up Laravel with Docker Compose and MySQL
+
+[ v2 ] Project Notifier Publisher/Subscriber
+
+Instructions below allow you to develop locally in your computer.
+
+1.A Prepare your project folder and files
+
+Create project root folder (e.g.,
+
+Place your Laravel app inside
+
+Place your React app inside
+
+1.B If you are cloning someone else’s GitHub repository :
+
+Just open terminal from the directory where you want to place the project root folder
+
+git clone <project ssh root>
+
+After you have performed either 1A or 1B :
+
+Copy environment settings template:
+
+cp laravel/.env.example laravel/.env
+
+2. Configure Docker files
+
+docker-compose.yml
+
+Dockerfiles for:
+
+3. Configure Laravel
+
+Set in
+
+DB_CONNECTION=mysql
+DB_HOST=mysql
+DB_PORT=3306
+DB_DATABASE=app
+DB_USERNAME=app
+DB_PASSWORD=app
+
+These match your MySQL Docker Compose environment variables at
+
+Set up Laravel to Deploy to Railway
+
+mysql
+
+php
+
+nginx
+
+laravel
+
+react
+
+PHP services (install PHP, extensions).
+
+Laravel CLI container (also installs Composer).
+
+4. Start Docker containers
+
+From the project root
+
+docker-compose up -d --build
+
+This builds images (if needed) and starts all containers.
+
+5. Verify containers are running
+
+Use:
+
+docker-compose ps
+
+# You will see the following (similar) :
+frankpulidoalvarez@Franks-Mac-mini laravel % docker-compose ps
+NAME               IMAGE              COMMAND                  SERVICE   CREATED              STATUS                        PORTS
+notifier-laravel   notifier-laravel   "docker-php-entrypoi…"   laravel   About a minute ago   Up About a minute             8000/tcp
+notifier-mysql     mysql:8.0          "docker-entrypoint.s…"   mysql     About a minute ago   Up About a minute (healthy)   0.0.0.0:3700->3306/tcp, [::]:3700->3306/tcp
+notifier-nginx     nginx:alpine       "/docker-entrypoint.…"   nginx     About a minute ago   Up About a minute             0.0.0.0:8988->80/tcp, [::]:8988->80/tcp
+notifier-php       notifier-php       "docker-php-entrypoi…"   php       About a minute ago   Up About a minute             9000/tcp
+notifier-react     notifier-react     "docker-entrypoint.s…"   react     About a minute ago   Up About a minute             0.0.0.0:8989->5173/tcp, [::]:8989->5173/tcp
+
+Each container (
+
+6. Run Laravel commands inside the
+
+Run in
+
+docker-compose exec laravel composer install
+docker-compose exec laravel php artisan key:generate
+docker-compose exec laravel php artisan migrate
+
+This (1) installs dependencies, (2) sets APP_KEY, (3) creates database tables.
+
+7. Access your apps
+
+Laravel web app (served by Nginx) at:
+
+React dev server app at:
+
+MySQL database port on host at 3700 (for MySQL clients, NOT a web page).
+
+http://localhost:8988
+
+http://localhost:8989
+
+# To open mysql in terminal :
+docker-compose exec mysql mysql -uapp -papp app
+
+# Then execute sql commands :
+mysql> SHOW TABLES;
++-----------------------+
+| Tables_in_app         |
++-----------------------+
+| cache                 |
+| cache_locks           |
+| failed_jobs           |
+| job_batches           |
+| jobs                  |
+| migrations            |
+| password_reset_tokens |
+| sessions              |
+| users                 |
++-----------------------+
+9 rows in set (0.00 sec)
+
+8. Optional troubleshooting
+
+If MySQL 8 authentication errors (
+
+command: --default-authentication-plugin=mysql_native_password
+
+Then rebuild and restart containers.
+
+Ensure environment variables match between
+
+Check logs with:
+
+docker-compose logs laravel
+docker-compose logs mysql
+
+This is the full, methodical sequence to set up your Laravel app with Docker, MySQL, and React.
+
+IMPORTANT : Everytime
+
+If you modify
+
+docker-compose exec laravel php artisan config:clear
+docker-compose exec laravel php artisan cache:clear
+# Or just this command below :
+docker-compose exec laravel php artisan optimize:clear
+
+# Then rebuild and restart the containers :
+docker-compose down
+docker-compose up -d --build
+
+# Run migrations :
+docker-compose exec laravel php artisan migrate
+
+Notes
+
+Use
+
+frankpulidoalvarez@Franks-Mac-mini notifier % docker-compose exec laravel php artisan migrate
+
+Use
+
+frankpulidoalvarez@Franks-Mac-mini laravel % docker-compose exec php artisan migrate
+
+docker-compose.yml
+
+nginx/default.conf
+
+php/Dockerfile
+
+Avoid running
+
+DOCKERFILE
+
+There are 2 Dockerfiles in the project
+
+/notifier/laravel/Dockerfile
+/notifier/php/Dockerfile
+
+Your two Dockerfiles serve different purposes:
+
+notifier/php/Dockerfile
+
+notifier/laravel/Dockerfile
+
+How this affects your workflow:
+
+The PHP container built from
+
+The Laravel CLI container built from
+
+Your
+
+What you likely need to do:
+
+Run Composer and Artisan commands in the
+
+Use the service name for the Laravel CLI service from your
+
+How to check service names (from your project root) :
+
+# Run :
+docker-compose ps
+# We get :
+frankpulidoalvarez@Franks-Mac-mini notifier % docker compose ps
+NAME               IMAGE              COMMAND                  SERVICE   CREATED       STATUS                 PORTS
+notifier-laravel   notifier-laravel   "docker-php-entrypoi…"   laravel   5 hours ago   Up 5 hours             8000/tcp
+notifier-mysql     mysql:8.0          "docker-entrypoint.s…"   mysql     5 hours ago   Up 5 hours (healthy)   0.0.0.0:3700->3306/tcp, [::]:3700->3306/tcp
+notifier-nginx     nginx:alpine       "/docker-entrypoint.…"   nginx     5 hours ago   Up 5 hours             0.0.0.0:8988->80/tcp, [::]:8988->80/tcp
+notifier-php       notifier-php       "docker-php-entrypoi…"   php       5 hours ago   Up 5 hours             9000/tcp
+notifier-react     notifier-react     "docker-entrypoint.s…"   react     5 hours ago   Up 5 hours             0.0.0.0:8989->5173/tcp, [::]:8989->5173/tcp
+frankpulidoalvarez@Franks-Mac-mini notifier %
+
+Related
+
+These sources collectively cover everything from the Docker configurations, environment variables management, MySQL setup inside Docker, Laravel artisan commands execution, and running migrations to access and verify your database.
+
+1. DigitalOcean — How To Set Up Laravel, Nginx, and MySQL with Docker Compose

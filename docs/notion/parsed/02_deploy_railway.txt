@@ -1,0 +1,156 @@
+Set up Laravel to Deploy to Railway
+
+[ v2 ] Project Notifier Publisher/Subscriber
+
+The previous local setup builds containers and work beautifully, but won’t work when deploying to Railway using GitHub integration.
+
+Our endpoints work locally because Docker Compose builds all containers, networks them together, shares volumes, and sets up inter-container links and environment variables automatically. Railway does
+
+‣
+
+‣
+
+Why Railway Fails by Default
+
+If you deploy only the Nginx or PHP-FPM container as a single service, it
+can't find or reach supporting containers (like DB, PHP-FPM, queue
+worker) because those aren't deployed.
+
+In Compose,
+
+On Railway, unless
+
+Step-by-step Roadmap
+
+Below you will find a step-by-step roadmap tailored for this specific Railway project deployment to follow best practices and get your endpoints working reliably :
+
+1. Organize your GitHub repo structure
+
+Keep all your container source folders (e.g.,
+
+Each folder should have its own
+
+2. Set up Railway services one by one
+
+In Railway, create a
+
+For each Railway service, connect to the
+
+3. Configure service environment variables in Railway
+
+Copy your local
+
+Use Railway’s
+
+4. Set correct start commands
+
+For PHP-FPM container, default start should be running
+
+For Nginx, run Nginx normally (usually default CMD).
+
+For Laravel queue worker service, set start to appropriate
+
+React service typically runs
+
+5. Configure Railway networking
+
+For example:
+
+Nginx service → Dockerfile in
+
+PHP-FPM service → Dockerfile in
+
+Laravel utility → Dockerfile in
+
+MySQL → Dockerfile in
+
+React → Dockerfile in
+
+Use
+
+Adjust Nginx config to proxy requests to Railway’s PHP-FPM private domain and port.
+
+Expose only the Nginx service publicly, as that is your HTTP entry point.
+
+6. GITHUB ACTIONS
+
+Before deploying to Railway you have to prepare your HitHub repository as detailed below.
+
+To push multiple Docker containers from a single GitHub repository for Railway deployment
+
+In Railway, create separate services
+
+This method organizes the one repo with multiple Docker containers into individual container images pushed independently, ready for multi-service deployment on Railway.Railway only deploys one container (one service) per deployment because it does not support docker-compose natively for multi-container apps. If your GitHub repo contains the full multi-container project, to deploy each container separately on Railway you must:
+
+In GitHub Actions, create a workflow that builds and pushes each container image separately to a container registry (e.g. Docker Hub). Use Docker
+build actions with different Dockerfiles or contexts.
+
+For example, use a matrix build to iterate over nginx, php-fpm, laravel,
+react, and mysql containers, build each Docker image, and push it tagged separately.
+
+Then in Railway, create separate services for each container image,
+configuring ports, environment variables, and start commands per
+service.
+
+This way, your single GitHub repo hosts all container sources, but containers are built and pushed independently, and Railway deploys each as a distinct service. Otherwise, Railway tries to deploy one container per service and cannot natively handle the whole compose stack at once.
+
+6-1. Use GitHub Actions with a matrix or multiple jobs:
+
+Define a GitHub Actions workflow in
+
+Use separate build and push steps for each container in your project (nginx, php-fpm, laravel, react, mysql).
+
+You can specify different Dockerfiles or context folders for each container.
+
+Use a matrix build to run these builds in parallel efficiently.
+
+6-2. Example snippet for multiple images
+
+textname: Build and Push Docker Images
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service: [nginx, php-fpm, laravel, react, mysql]
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build and push ${{ matrix.service }} image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./path/to/${{ matrix.service }}
+          file: ./path/to/${{ matrix.service }}/Dockerfile
+          push: true
+          tags: your-dockerhub-username/${{ matrix.service }}:latest
+
+6-3. Set secrets in GitHub
+
+6-4. Push your changes to GitHub.
+
+The action will push each container image separately to your Docker registry.
+
+7. Push your repo and deploy
+
+Once the above is configured, push to GitHub.
+
+Each Railway service builds and deploys independently but shares the repo as source, building from their respective Dockerfiles.
+
+Railway will handle builds and deployments for each service separately.
+
+Test endpoints via Railway’s public URL for the Nginx service
+
+Summary
+
+This approach avoids mixing all containers in a single Railway deployment, opts for individual services with clear isolated build contexts, and uses Railway’s private networking and variable referencing for intra-service communication.
+
+It allows you to keep developing locally using your current docker-compose stack, while enabling seamless multi-service deployment on Railway via one GitHub repo source without extra pipelines.
+
+If you want, next I can help you draft a sample Railway service creation step or Dockerfile paths for each container.
+
+Confirm your Laravel endpoints respond correctly through Nginx.

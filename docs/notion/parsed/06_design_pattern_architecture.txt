@@ -1,0 +1,323 @@
+2. STOP! Design pattern, architecture, framework
+
+[ v2 ] Project Notifier Publisher/Subscriber
+
+WARP discussion about what way to take
+
+[ FRANK ]
+
+I want to create a laravel project where i would like to implement ddd-hexagonal... there are publishers and subscribers... i could use User for authentication and some other models related to user... For instance, a User publisher could have be related to a Publisher and to several subscribers if the subscription is private... (Subscribers are invited by Publisher)... There could also be Publishers with public content for any subscriber... Last you can have a User subscriber related to an instance of Subscriber... Other models : Notification (belongs to publisher), Subscription (belongs to subscribers)... So far i have only work in Laravel, there is no Hexagonal squeleton... Models, Migrations, Factories, Seeders... Roadmap?.
+
+[ WARP ]
+
+So why Laravel at all?
+
+Practical Reasons
+
+Rapid Development: Laravel provides excellent tooling (Artisan, Eloquent, etc.)
+
+Ecosystem: Rich package ecosystem for common needs
+
+Team Familiarity: Your team knows Laravel
+
+Infrastructure: Database migrations, queues, caching, etc.
+
+Deployment: Laravel deployment patterns are well-established
+
+But you're right to question it!
+
+If we're going pure
+
+Use Laravel as Infrastructure only - Domain/Application layers have zero Laravel dependencies
+
+Use a lighter framework like Slim, or even pure PHP
+
+Use a different language entirely - Python, Go, Node.js, etc.
+
+Use microservices - Each bounded context as separate service
+
+The Real Question
+
+Are you looking for:
+
+A) Hexagonal within Laravel (Laravel provides infrastructure conveniences)
+
+B) Pure Hexagonal (Laravel is just one replaceable adapter)
+
+•  Complete framework independence
+•  Maximum flexibility but more boilerplate
+•  Could replace Laravel with anything
+
+C) Different approach entirely : Microservices
+
+My Take
+
+Since you already have Laravel models/migrations,
+
+What's your preference? Are you looking to:
+•  Leverage Laravel's ecosystem while achieving clean architecture?
+•  Or achieve maximum architectural purity regardless of framework convenience?
+
+This will fundamentally change how we approach the design!
+
+3 Options in more Detail
+
+Option A: Hexagonal within Laravel
+
+Framework
+
+laravel-project/
+├── app/
+│   ├── Models/ (existing Laravel models - infrastructure adapters)
+│   ├── Http/
+│   │   └── Controllers/ (thin Laravel controllers)
+│   ├── Domain/ (pure business logic - zero Laravel dependencies)
+│   │   ├── Publisher/
+│   │   │   ├── Entities/
+│   │   │   │   ├── Publisher.php
+│   │   │   │   └── Notification.php
+│   │   │   ├── Repositories/
+│   │   │   │   └── PublisherRepositoryInterface.php
+│   │   │   ├── ValueObjects/
+│   │   │   └── Services/
+│   │   │       └── NotificationDomainService.php
+│   │   ├── Subscriber/
+│   │   │   ├── Entities/
+│   │   │   ├── Repositories/
+│   │   │   ├── ValueObjects/
+│   │   │   └── Services/
+│   │   └── Shared/
+│   │       ├── ValueObjects/
+│   │       └── Events/
+│   ├── Application/ (use cases - framework agnostic)
+│   │   ├── UseCases/
+│   │   │   ├── Publisher/
+│   │   │   ├── Subscriber/
+│   │   │   └── Notification/
+│   │   ├── DTOs/
+│   │   └── Ports/ (interfaces)
+│   └── Infrastructure/ (Laravel-specific implementations)
+│       ├── Repositories/
+│       │   ├── EloquentPublisherRepository.php
+│       │   └── EloquentSubscriberRepository.php
+│       ├── Http/
+│       │   └── Adapters/
+│       └── Providers/
+├── database/ (Laravel conveniences)
+│   ├── migrations/
+│   ├── factories/
+│   └── seeders/
+└── routes/
+    └── api.php
+
+Option B: Pure Hexagonal
+
+Framework
+
+publisher-subscriber-system/
+├── src/
+│   ├── Core/ (completely framework-agnostic)
+│   │   ├── Domain/
+│   │   │   ├── Publisher/
+│   │   │   │   ├── Entities/
+│   │   │   │   │   ├── Publisher.php
+│   │   │   │   │   └── Notification.php
+│   │   │   │   ├── Repositories/
+│   │   │   │   │   └── PublisherRepositoryInterface.php
+│   │   │   │   ├── ValueObjects/
+│   │   │   │   │   └── PublisherId.php
+│   │   │   │   └── Services/
+│   │   │   │       └── NotificationDomainService.php
+│   │   │   ├── Subscriber/
+│   │   │   │   ├── Entities/
+│   │   │   │   ├── Repositories/
+│   │   │   │   ├── ValueObjects/
+│   │   │   │   └── Services/
+│   │   │   └── Shared/
+│   │   │       ├── ValueObjects/
+│   │   │       ├── Events/
+│   │   │       └── Exceptions/
+│   │   └── Application/
+│   │       ├── UseCases/
+│   │       │   ├── Publisher/
+│   │       │   ├── Subscriber/
+│   │       │   └── Notification/
+│   │       ├── DTOs/
+│   │       ├── Ports/ (all interfaces)
+│   │       │   ├── Repositories/
+│   │       │   ├── Services/
+│   │       │   └── Http/
+│   │       └── Services/
+│   └── Infrastructure/ (all external adapters)
+│       ├── Web/
+│       │   ├── Laravel/ (one option)
+│       │   │   ├── Controllers/
+│       │   │   ├── Routes/
+│       │   │   └── Middleware/
+│       │   ├── Slim/ (another option)
+│       │   │   └── Controllers/
+│       │   └── Symfony/ (another option)
+│       ├── Persistence/
+│       │   ├── MySQL/
+│       │   │   ├── Repositories/
+│       │   │   └── Models/
+│       │   ├── PostgreSQL/
+│       │   └── InMemory/ (for testing)
+│       ├── Messaging/
+│       │   ├── RabbitMQ/
+│       │   └── Redis/
+│       └── External/
+│           ├── EmailServices/
+│           └── NotificationServices/
+├── adapters/ (deployable applications)
+│   ├── web-laravel/
+│   ├── web-slim/
+│   ├── cli/
+│   └── api-gateway/
+├── migrations/ (database agnostic)
+├── tests/
+└── composer.json
+
+Option C: Microservices/Event-Driven
+
+Framework
+
+publisher-subscriber-ecosystem/
+├── services/
+│   ├── user-service/ (Slim Framework)
+│   │   ├── src/
+│   │   │   ├── Domain/
+│   │   │   │   └── User/
+│   │   │   ├── Application/
+│   │   │   └── Infrastructure/
+│   │   ├── public/
+│   │   │   └── index.php
+│   │   └── composer.json
+│   ├── publisher-service/ (Slim Framework)
+│   │   ├── src/
+│   │   │   ├── Domain/
+│   │   │   │   ├── Publisher/
+│   │   │   │   └── Notification/
+│   │   │   ├── Application/
+│   │   │   └── Infrastructure/
+│   │   ├── public/
+│   │   └── composer.json
+│   ├── subscriber-service/ (Slim Framework)
+│   │   ├── src/
+│   │   │   ├── Domain/
+│   │   │   │   ├── Subscriber/
+│   │   │   │   └── Subscription/
+│   │   │   ├── Application/
+│   │   │   └── Infrastructure/
+│   │   ├── public/
+│   │   └── composer.json
+│   └── notification-service/ (could be Node.js/Express)
+│       ├── src/
+│       │   ├── domain/
+│       │   ├── application/
+│       │   └── infrastructure/
+│       └── package.json
+├── shared/
+│   ├── events/ (event schemas)
+│   ├── contracts/ (API contracts)
+│   └── libraries/
+├── infrastructure/
+│   ├── message-broker/ (RabbitMQ/Apache Kafka)
+│   ├── api-gateway/ (Kong/Nginx)
+│   ├── service-discovery/
+│   └── monitoring/
+├── deployment/
+│   ├── docker-compose.yml
+│   ├── kubernetes/
+│   └── terraform/
+└── docs/
+    ├── api/
+    └── architecture/
+
+Framework Choices Summary
+
+Option A
+
+Option B
+
+Option C
+
+My Recommendation per Option:
+
+Option A
+
+Which option resonates with your vision? Each has very different implications for development, testing, deployment, and team workflow.
+
+DDD-Hexagonal Architecture Overview
+
+Domain Layer (Core Business Logic)
+
+This is the heart of your application, containing pure business logic with no external dependencies.
+
+Aggregates & Entities
+
+User (Root Aggregate)
+
+Publisher (Root Aggregate)
+
+Subscriber (Root Aggregate)
+
+Subscription (Entity within Publisher/Subscriber context)
+
+Notification (Entity within Publisher context)
+
+Value Objects
+
+Email
+
+SubscriptionType (private/public)
+
+NotificationStatus
+
+SubscriptionStatus
+
+Domain Services
+
+SubscriptionService - handles subscription logic
+
+NotificationService - handles notification dispatching
+
+AccessControlService - manages private/public content access
+
+Application Layer (Use Cases)
+
+Orchestrates business logic and coordinates between domain and infrastructure.
+
+Use Cases
+
+CreatePublisherUseCase
+
+SubscribeToPublisherUseCase
+
+InviteSubscriberUseCase
+
+PublishNotificationUseCase
+
+AccessContentUseCase
+
+DTOs
+
+CreatePublisherRequest/Response
+
+SubscriptionRequest/Response
+
+NotificationRequest/Response
+
+Infrastructure Layer (External Concerns)
+
+Handles persistence, external APIs, and Laravel-specific implementations.
+
+Repositories (Interfaces in Domain, Implementations in Infrastructure)
+
+UserRepositoryInterface → EloquentUserRepository
+
+PublisherRepositoryInterface → EloquentPublisherRepository
+
+SubscriberRepositoryInterface → EloquentSubscriberRepository
+
+NotificationRepositoryInterface → EloquentNotificationRepository

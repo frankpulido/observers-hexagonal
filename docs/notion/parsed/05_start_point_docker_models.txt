@@ -1,0 +1,49 @@
+1. Start point : Docker setup + Basic Models and DB migrations
+
+[ v2 ] Project Notifier Publisher/Subscriber
+
+Once Docker has been successfully set up, build a Basic common start point with the models and database migrations to experiment with possible solutions for the Notification Domains in Hexagonal.
+
+IMPORTANT : the Hexagonal architecture has not been implemented since depends on pendent team decisions to move forward. That’s why some experimentation is needed to test different team ideas.
+
+Start point
+
+‣
+
+https://github.com/frankpulido/observers-hexagonal.git
+
+The rationale behind the design. Models :
+
+User
+
+The roles are :
+
+During the sign-up workflow the User→role becomes an Entity : either Subscriber or Publisher.
+
+There is also an
+
+Publisher
+
+Subscriber
+
+PublisherList
+
+Notification
+
+Subscription
+
+Proposals for Backend
+
+1. Laravel Notifications
+
+Laravel framework : Observers / Services called by controllers
+
+Use Observers to trigger Services and build the application the most loosely coupled possible.
+
+Make Controllers’ methods lean.
+
+2. Slim Microservices : DDD-Hexagonal
+
+Slim Framework : Microservices with design/architecture pattern DDD-Hexagonal
+
+Instead of using an hexagonal architecture embedded in the Laravel framework, migrate the entire project to Slim.

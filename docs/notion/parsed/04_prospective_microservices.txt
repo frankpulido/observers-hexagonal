@@ -1,0 +1,13 @@
+0. Prospective Notifier MicroServices
+
+[ v2 ] Project Notifier Publisher/Subscriber
+
+Alexa
+
+Home Assistant
+
+Slack
+
+Discord
+
+Telegram

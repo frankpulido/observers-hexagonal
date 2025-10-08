@@ -1,0 +1,96 @@
+6. First Sprint : prepare framework for Alexa (Option A : document #4)
+
+[ v2 ] Project Notifier Publisher/Subscriber
+
+Existing Laravel Structure
+
+✅ app/Models/
+
+✅ database/migrations/
+
+✅ app/Observers/NotificationObserver.php - Keep existing observer
+
+✅ database/factories/
+
+✅ database/seeders/
+
+These become your
+
+What You DO Need to Add/Modify for Phase 1 📝
+
+New Directory Structure
+
+# Create the hexagonal architecture
+mkdir -p src/ObserversHex/{Domain,Application,Infrastructure}
+
+Composer Autoload (MUST modify)
+
+// composer.json - ADD this to existing autoload
+{
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/",
+            "ObserversHex\\": "src/ObserversHex/"  // ADD THIS LINE
+        }
+    }
+}
+
+One New Migration (for service channels):
+
+-- New migration: create_user_service_channels_table
+CREATE TABLE user_service_channels (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT UNSIGNED NOT NULL,
+    service VARCHAR(50) NOT NULL,
+    username VARCHAR(255) NOT NULL,
+    is_active BOOLEAN DEFAULT TRUE,
+    preferences JSON NULL,
+    created_at TIMESTAMP NULL,
+    updated_at TIMESTAMP NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_user_service (user_id, service)
+);
+
+New Files to Create (in src/ and Laravel integration):
+
+src/ObserversHex/
+├── Domain/... (new domain entities)
+├── Application/... (new use cases)
+└── Infrastructure/... (new adapters)
+
+app/Http/Controllers/
+└── Alexa/AlexaWebhookController.php (NEW)
+
+routes/
+└── alexa.php (NEW)
+
+config/
+└── alexa.php (NEW)
+
+The Key Insight
+
+Phase 1 is ADDITIVE, not REPLACIVE
+
+Your existing models become "Infrastructure adapters"
+
+New
+
+Laravel controllers wire everything together
+
+Zero disruption to existing functionality
+
+Phase 3 (AWS Migration) is when you modify existing files:
+
+Extract Alexa logic to separate Python service
+
+Modify existing controllers to call external APIs
+
+Add message queues and service communication
+
+Summary
+
+Phase 1
+
+Phase 3
+
+Existing Laravel foundation is excellent - we're building on it, not replacing it! 🚀

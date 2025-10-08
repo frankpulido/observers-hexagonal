@@ -1,0 +1,69 @@
+9. Docker setup for Railway Deployment
+
+[ v2 ] Project Notifier Publisher/Subscriber
+
+Based on your answers and current setup, here is a clear, step-by-step roadmap tailored for your specific Railway project deployment to follow best practices and get your endpoints working reliably:
+
+Organize your GitHub repo structure
+
+Set up Railway services one by one
+
+Configure service environment variables in Railway
+
+Set correct start commands
+
+Configure Railway networking
+
+Push your repo and deploy
+
+Test endpoints via Railway’s public URL for the Nginx service
+
+This approach avoids mixing all containers in a single Railway deployment, opts for individual services with clear isolated build contexts, and uses Railway’s private networking and variable referencing for intra-service communication.
+
+It allows you to keep developing locally using your current docker-compose stack, while enabling seamless multi-service deployment on Railway via one GitHub repo source without extra pipelines.
+
+Keep all your container source folders (e.g.,
+
+Each folder should have its own
+
+In Railway, create a
+
+For each Railway service, connect to the
+
+For example:
+
+Nginx service → Dockerfile in
+
+PHP-FPM service → Dockerfile in
+
+Laravel utility → Dockerfile in
+
+MySQL → Dockerfile in
+
+React → Dockerfile in
+
+Copy your local
+
+Use Railway’s
+
+For PHP-FPM container, default start should be running
+
+For Nginx, run Nginx normally (usually default CMD).
+
+For Laravel queue worker service, set start to appropriate
+
+React service typically runs
+
+Use
+
+Adjust Nginx config to proxy requests to Railway’s PHP-FPM private domain and port.
+
+Expose only the Nginx service publicly, as that is your HTTP entry point.
+
+Once the above is configured, push to GitHub.
+
+Each Railway service builds and deploys independently but shares the repo as source, building from their respective Dockerfiles.
+
+Railway will handle builds and deployments for each service separately.
+
+Confirm your Laravel endpoints respond correctly through Nginx.

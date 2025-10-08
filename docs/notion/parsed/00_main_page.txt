@@ -1,0 +1,187 @@
+[ v2 ] Project Notifier Publisher/Subscriber
+
+Set Up Laravel with Docker Compose and MySQL
+
+Set up Laravel to Deploy to Railway
+
+0. Laravel framework architecture for DDD and Hexagonal
+
+0. Prospective Notifier MicroServices
+
+1. Start point : Docker setup + Basic Models and DB migrations
+
+2. STOP! Design pattern, architecture, framework
+
+3. Alexa Rules !!!
+
+4. Option A [ Alexa best choice ]
+
+5. Roadmap for Multichannel App
+
+6. First Sprint : prepare framework for Alexa (Option A : document #4)
+
+7. Authentication - GDPR Compliance
+
+8. Safety : decoupling User and Subscriber from Microservice
+
+9. Docker setup for Railway Deployment
+
+Team Tools
+
+# GitHub repository
+https://github.com/jordimorillo/notifier
+# Taiga
+https://tree.taiga.io/project/jordimorillo-notificador/team
+# Discord : programador-web.com #proyecto-piloto-mañanas
+https://discord.com/channels/1413894179255222315/1417933693741306089
+# Top Report
+https://www.top-report.com/teams/1
+
+# Under consideration Google CLOUD RUN :
+https://cloud.google.com/functions
+
+Technologies
+
+Docker - Laravel - PHP - MySQL - React
+
+SOLID - DRY - KISS
+
+TDD - DDD - Microservices - Hexagonal
+
+Warp DEV IA prompting tool :
+
+Gemini
+
+NotebookLM : Bases de conocimiento
+
+Resources
+
+DOCKER TUTORIALS
+
+YouTube : Docker Crash Course for Absolute Beginners
+
+YouTube : The intro to Docker I wish I had when I started
+
+LARAVEL MICROSERVICES TUTORIALS
+
+YouTube : What are Microservices really all about?... (and when not to use them)
+
+DDD in Laravel : Detoxing from Eloquent
+
+YouTube : Laravel Microservices Full Course Using Laravel Sail and RabbitMQ
+
+YouTube PlayList : React and Laravel Microservices | Event-Driven Architecture with RabbitMQ
+
+YouTube PlayList : Laravel Microservices Full Course | Event Driven Architecture with RabbitMQ
+
+THE
+
+Medium | System Design Patterns: Publisher-Subscriber pattern
+
+DEV | Design Pattern: Publisher-Subscriber
+
+Refactoring Guru | Observer... Also known as Event-Subscriber, Listener
+
+Description
+
+Notifier is a dedicated microservice designed to receive events from multiple sources (IoT devices, SaaS webhooks, partner systems, publishers) and provide a unified notification system. Its responsibilities include:
+
+Normalizing incoming events into a canonical schema.
+
+Persisting notifications.
+
+Routing and dispatching notifications to multiple channels (in-app, email, SMS, push, webhooks).
+
+Supporting public and private publisher channels.
+
+Enabling publishers to request optional subscriber profile attributes (with explicit consent).
+
+Ensuring reliability, idempotency, and observability of notifications.
+
+The service follows the
+
+Publishers
+
+Listeners
+
+Message broker / Queue
+
+Future extensions may include
+
+Environment
+
+Backend
+
+Considering restart using SLIM
+
+Frontend / Client
+
+Database
+
+Message Broker / Queue
+
+Containerization
+
+Deployment
+
+Real-time updates
+
+Developers Roadmap
+
+Assumptions
+
+1. Two client roles:
+
+Publishers
+
+Listeners
+
+2. Publisher channels can be
+
+3. Listeners disclose profile attributes at their discretion; consent is required before sharing with publishers.
+
+4. Publishers may request additional subscriber attributes for
+
+5. Future input sources may include
+
+Phase 0 — Foundations (Conceptual Clarity)
+
+1.
+
+- Receives events from external sources (IoT, SaaS, webhooks, publishers).
+
+- Normalizes events into a canonical schema.
+
+- Persists, routes, and dispatches notifications.
+
+2.
+
+- Does not process business logic of the source systems.
+
+- Does not modify payloads beyond normalization.
+
+3.
+
+- In-app (React via API or WebSockets)
+
+- Email / SMS
+
+- Webhooks for partner callbacks
+
+- Push notifications
+
+Phase 1 — Event & Notification Modeling
+
+1.
+
+- Fields:
+
+2.
+
+- Fields:
+
+- Relationships: one event → multiple channels/recipients.
+
+3.
+
+pending → sent → read/failed → archived
