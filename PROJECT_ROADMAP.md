@@ -293,8 +293,8 @@ Build a **platform-agnostic notification system** where:
 Extract channels into separate services:
 ```
 Core Service (Laravel) ←→ Alexa Service (AWS Lambda - Python)
-                      ←→ Slack Service (Google Cloud - Go)
-                      ←→ Discord Service (Kubernetes - Rust)
+                       ←→ Slack Service (Google Cloud - Go)
+                       ←→ Discord Service (Kubernetes - Rust)
 ```
 
 ### **Phase 8: Advanced Features**
@@ -317,15 +317,15 @@ Core Service (Laravel) ←→ Alexa Service (AWS Lambda - Python)
 
 ## 📊 **Progress Tracking**
 
-| Phase | Status | Start Date | End Date | Duration |
-|-------|--------|------------|----------|----------|
-| Phase 0: Setup | ✅ Complete | Oct 7, 2025 | Oct 7, 2025 | 2 hours |
-| Phase 1: Foundation | 📋 Planned | TBD | TBD | ~1 week |
-| Phase 2: Alexa | 📋 Planned | TBD | TBD | ~2 weeks |
-| Phase 3: Multi-Channel | 📋 Planned | TBD | TBD | ~2 weeks |
-| Phase 4: Features | 📋 Planned | TBD | TBD | ~1 week |
-| Phase 5: Testing | 📋 Planned | TBD | TBD | ~1 week |
-| Phase 6: Production | 📋 Planned | TBD | TBD | ~1 week |
+| Phase                  | Status      | Start Date  | End Date.   | Duration |
+|------------------------|-------------|-------------|-------------|----------|
+| Phase 0: Setup.        | ✅ Complete | Oct 7, 2025 | Oct 7, 2025 | 2 hours  |
+| Phase 1: Foundation    | 📋 Planned  | TBD         | TBD.        | ~1 week  |
+| Phase 2: Alexa         | 📋 Planned  | TBD         | TBD         | ~2 weeks |
+| Phase 3: Multi-Channel | 📋 Planned  | TBD         | TBD         | ~2 weeks |
+| Phase 4: Features.     | 📋 Planned  | TBD         | TBD         | ~1 week  |
+| Phase 5: Testing       | 📋 Planned  | TBD         | TBD         | ~1 week  |
+| Phase 6: Production    | 📋 Planned  | TBD         | TBD         | ~1 week  |
 
 ---
 
@@ -345,13 +345,13 @@ Core Service (Laravel) ←→ Alexa Service (AWS Lambda - Python)
 
 ## 📝 **Key Decisions Log**
 
-| Date | Decision | Rationale |
-|------|----------|-----------|
-| Oct 7, 2025 | Use hexagonal architecture | Enable future microservices, framework independence |
-| Oct 7, 2025 | Username-based integration | Simpler than OAuth, better privacy |
-| Oct 7, 2025 | Alexa as first channel | Forces true hexagonal thinking |
-| Oct 7, 2025 | PublisherList as core entity | Users subscribe to topics, not publishers |
-| Oct 7, 2025 | mcpTaiga for project management | Automated Taiga population from git/docs |
+| Date        | Decision.                       | Rationale                                           |
+|-------------|---------------------------------|-----------------------------------------------------|
+| Oct 7, 2025 | Use hexagonal architecture.     | Enable future microservices, framework independence |
+| Oct 7, 2025 | Username-based integration      | Simpler than OAuth, better privacy                  |
+| Oct 7, 2025 | Alexa as first channel          | Forces true hexagonal thinking                      |
+| Oct 7, 2025 | PublisherList as core entity    | Users subscribe to topics, not publishers           |
+| Oct 7, 2025 | mcpTaiga for project management | Automated Taiga population from git/docs            |
 
 ---
 

@@ -24,7 +24,7 @@
 
 ```
 laravel/
-├── app/                    # Laravel framework (UNTOUCHED)
+├── app/                   # Laravel framework (UNTOUCHED)
 │   └── Models/            # Become infrastructure adapters
 ├── src/ObserversHex/      # NEW - Pure business logic
 │   ├── Domain/            # Zero Laravel dependencies
@@ -155,7 +155,7 @@ publishers (user_id, name, cif, address, max_private_subscribers_plan)
 publisher_lists (publisher_id, name, is_private)
 subscriptions (subscriber_id, publisher_list_id)
 notifications (publisher_list_id, type, title, message)
-  // type: ['in-app', 'sms', 'mail', 'push']
+// type: ['in-app', 'sms', 'mail', 'push']
 
 // Models  
 User, Publisher, PublisherList, Subscriber, Subscription, Notification
@@ -373,18 +373,18 @@ Implement interfaces using existing Laravel models
 
 ## 🎯 DECISION SUMMARY
 
-| Decision | Choice | Source |
-|----------|--------|--------|
-| **Hexagonal placement** | `src/ObserversHex/` outside `app/` | Notion 08 |
-| **Authentication** | Username-based (no OAuth) | Notion 11 |
-| **First channel** | Alexa | Notion 07-08 |
-| **Channel table** | `user_service_channels` | Notion 10 |
-| **Verification** | Required before `is_active=true` | Your clarification |
-| **Services** | Alexa, Slack, Discord, Telegram, Home Assistant | Notion 04 |
-| **Evolution** | Monolith → Microservices (3 phases) | Notion 09 |
-| **Future microservices** | MCPs for channels | Our discussion |
-| **Current models** | Keep as infrastructure adapters | Notion 08 |
-| **Testing** | Domain tests fast (no Laravel) | Notion 08 |
+| Decision                 | Choice                                          | Source.        |
+|--------------------------|-------------------------------------------------|----------------|
+| **Hexagonal placement**  | `src/ObserversHex/` outside `app/`              | Notion 08      |
+| **Authentication**       | Username-based (no OAuth)                       | Notion 11.     |
+| **First channel**        | Alexa                                           | Notion 07-08   |
+| **Channel table**        | `user_service_channels`                         | Notion 10      |
+| **Verification**         | Required before `is_active=true`                | Our discussion |
+| **Services**             | Alexa, Slack, Discord, Telegram, Home Assistant | Notion 04      |
+| **Evolution**            | Monolith → Microservices (3 phases)             | Notion 09      |
+| **Future microservices** | MCPs for channels                               | Our discussion |
+| **Current models**       | Keep as infrastructure adapters.                | Notion 08.     |
+| **Testing**              | Domain tests fast (no Laravel).                 | Notion 08.     |
 
 ---
 

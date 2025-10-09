@@ -8,15 +8,15 @@
 
 ## 📚 **Documentation Files (Project Root)**
 
-| File | Size | Purpose | Status |
-|------|------|---------|--------|
-| `WARP.md` | 305 lines | AI-first project context | ✅ Current |
-| `PROJECT_ROADMAP.md` | 370 lines | Development phases & planning | ✅ Current |
-| `PROJECT_INDEX.md` | This file | Complete project reference | ✅ Current |
-| `README.md` | 220 B | User documentation | 📋 Needs expansion |
-| `README_dev.md` | 14 KB | Technical architecture deep dive | ✅ Current |
-| `README_docker_stack.md` | 1.6 KB | Docker configuration guide | ✅ Current |
-| `PHASE_0_IMPLEMENTATION_SUMMARY.md` | 358 lines | Setup phase completion record | ✅ Complete |
+| File                                | Size      | Purpose                          | Status             |
+|-------------------------------------|-----------|----------------------------------|--------------------|
+| `WARP.md`                           | 305 lines | AI-first project context         | ✅ Current         |
+| `PROJECT_ROADMAP.md`                | 370 lines | Development phases & planning    | ✅ Current         |
+| `PROJECT_INDEX.md`                  | This file | Complete project reference       | ✅ Current         |
+| `README.md`                         | 220 B.    | User documentation.              | 📋 Needs expansion |
+| `README_dev.md`                     | 14 KB     | Technical architecture deep dive | ✅ Current         |
+| `README_docker_stack.md`            | 1.6 KB.   | Docker configuration guide.      | ✅ Current         |
+| `PHASE_0_IMPLEMENTATION_SUMMARY.md` | 358 lines | Setup phase completion record    | ✅ Complete        |
 
 **Documentation Strategy:** See `/Users/frankpulidoalvarez/Documents/developer/mcp-servers/mcpTAIGA/DOCUMENTATION_STRATEGY.md`
 
@@ -165,45 +165,45 @@ observers-hexagonal/                                          # Project root
 
 #### **Models** (`laravel/app/Models/`)
 
-| File | Lines | Purpose | Key Relations |
-|------|-------|---------|---------------|
-| `User.php` | ~50 | Authentication & user management | hasOne: Publisher, Subscriber |
-| `Publisher.php` | 44 | Business entity profile | belongsTo: User; hasMany: PublisherList |
-| `PublisherList.php` | 37 | Content categories (topics) | belongsTo: Publisher; hasMany: Subscription |
-| `Subscriber.php` | ~40 | User subscription profile | belongsTo: User; hasMany: Subscription |
-| `Subscription.php` | ~35 | Links subscribers to lists | belongsTo: Subscriber, PublisherList |
-| `Notification.php` | ~40 | Multi-channel notifications | Types: in-app, SMS, mail, push |
+| File                | Lines | Purpose                          | Key Relations                               |
+|---------------------|-------|----------------------------------|---------------------------------------------|
+| `User.php`          | ~50   | Authentication & user management | hasOne: Publisher, Subscriber               |
+| `Publisher.php`     | 44    | Business entity profile          | belongsTo: User; hasMany: PublisherList     |
+| `PublisherList.php` | 37    | Content categories (topics)      | belongsTo: Publisher; hasMany: Subscription |
+| `Subscriber.php`    | ~40   | User subscription profile        | belongsTo: User; hasMany: Subscription      |
+| `Subscription.php`  | ~35   | Links subscribers to lists       | belongsTo: Subscriber, PublisherList        |
+| `Notification.php`  | ~40   | Multi-channel notifications      | Types: in-app, SMS, mail, push              |
 
 **Domain Model:**
 ```
 User ──┬── Publisher ── PublisherList ──┐
-       │                                 │
-       └── Subscriber ────────────── Subscription
+       │                                │
+       └── Subscriber ──────────── Subscription
                                         │
                                    Notification
 ```
 
 #### **Controllers** (`laravel/app/Http/Controllers/`)
 
-| File | Purpose | Status |
-|------|---------|--------|
-| `Controller.php` | Base controller | ✅ Existing |
+| File                       | Purpose               | Status      |
+|----------------------------|-----------------------|-------------|
+| `Controller.php`           | Base controller       | ✅ Existing |
 | `SubscriberController.php` | Subscriber management | ✅ Existing |
 
 #### **Observers** (`laravel/app/Observers/`)
 
-| File | Purpose | Events |
-|------|---------|--------|
+| File                       | Purpose                     | Events.                   |
+|----------------------------|-----------------------------|---------------------------|
 | `NotificationObserver.php` | Notification event handling | created, updated, deleted |
 
 #### **Configuration** (`laravel/`)
 
 | File | Purpose | Status |
-|------|---------|--------|
-| `composer.json` | PHP dependencies & autoload | 📋 Needs ObserversHex namespace |
-| `package.json` | Frontend build dependencies | ✅ Current |
-| `vite.config.js` | Frontend build configuration | ✅ Current |
-| `Dockerfile` | Laravel container definition | ✅ Current |
+|------------------|------------------------------|---------------------------------|
+| `composer.json`  | PHP dependencies & autoload  | 📋 Needs ObserversHex namespace |
+| `package.json`.  | Frontend build dependencies  | ✅ Current                      |
+| `vite.config.js` | Frontend build configuration | ✅ Current                      |
+| `Dockerfile`     | Laravel container definition | ✅ Current                      |
 
 ---
 
@@ -211,12 +211,12 @@ User ──┬── Publisher ── PublisherList ──┐
 
 #### **React App** (`react/`)
 
-| File | Purpose | Status |
-|------|---------|--------|
-| `package.json` | React dependencies | ✅ Current |
-| `vite.config.js` | Vite build configuration | ✅ Current |
-| `index.html` | App entry point | ✅ Current |
-| `Dockerfile` | React container definition | ✅ Current |
+| File             | Purpose                    | Status.    |
+|------------------|----------------------------|------------|
+| `package.json`.  | React dependencies         | ✅ Current |
+| `vite.config.js` | Vite build configuration.  | ✅ Current |
+| `index.html`     | App entry point            | ✅ Current |
+| `Dockerfile`.    | React container definition | ✅ Current |
 
 **Status:** Basic structure, needs implementation
 
@@ -226,12 +226,12 @@ User ──┬── Publisher ── PublisherList ──┐
 
 #### **Docker Configuration** (`/`)
 
-| File | Purpose | Status |
-|------|---------|--------|
+| File                 | Purpose                       | Status     |
+|----------------------|-------------------------------|------------|
 | `docker-compose.yml` | Multi-container orchestration | ✅ Current |
-| `php/Dockerfile` | PHP environment | ✅ Current |
-| `laravel/Dockerfile` | Laravel-specific setup | ✅ Current |
-| `react/Dockerfile` | React build container | ✅ Current |
+| `php/Dockerfile`     | PHP environment               | ✅ Current |
+| `laravel/Dockerfile` | Laravel-specific setup        | ✅ Current |
+| `react/Dockerfile`   | React build container         | ✅ Current |
 
 **Containers:**
 1. **laravel** - Backend application

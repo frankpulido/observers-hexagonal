@@ -1,7 +1,8 @@
 # 🔔 Observers-Hexagonal NOTIFIER - AI Project Context
 
-**Last Updated:** October 7, 2025  
-**Current Phase:** Phase 0 - Project Setup & Documentation  
+**Last Updated:** October 8, 2025  
+**Current Phase:** Phase 0 - Project Setup & Documentation (Complete)  
+**Next Phase:** Phase 1 - Hexagonal Architecture Foundation + MCP Infrastructure  
 **Taiga Board:** https://tree.taiga.io/project/frankpulido-notifier/
 
 ---
@@ -168,14 +169,25 @@ observers-hexagonal/
 - Taiga project populated with 30 user stories
 
 ### 🚧 **What's In Progress**
-- Setting up hexagonal architecture structure
-- Documentation system (this file!)
+- Planning hexagonal architecture with MCP integration
+- Finalizing authentication model design
 
-### 📋 **What's Next**
-- Create `src/ObserversHex/` directory structure
-- Define domain entities
-- Implement first use cases
-- Build Alexa adapter
+### 📋 **What's Next (Tomorrow - Oct 9)**
+**Feature 1: Hexagonal Architecture with MCPs**
+- Phase 0: Build hexagonal architecture foundation
+- Phase 1: Build first MCP (Alexa) + MCP adapter infrastructure
+- Phase 2+: Add more MCPs (Slack, Discord, etc.) - ~3 hours each
+
+**Feature 2: Authentication Model**
+- Revisit username-based authentication approach
+- Design verification flow (user self-verification)
+- Plan `user_service_channels` table implementation
+
+**Documentation Updates Needed:**
+- Update `WARP.md` - Add MCP section to Technology Stack
+- Update `PROJECT_ROADMAP.md` - Show MCP servers in Phase 1+
+- Update `README_dev.md` - Add MCP Architecture section
+- Create `ARCHITECTURE_MCP.md` - Detailed MCP design
 
 ---
 
@@ -332,10 +344,31 @@ git log --oneline -5
 ## 📝 **Notes for AI Assistants**
 
 - This project uses hexagonal architecture - keep Domain layer pure!
-- Username-based integration is a core principle - no OAuth
+- **Username-based integration is a core principle - NO OAuth!**
+  - Users provide their own service usernames (email for Alexa, @username for Slack, etc.)
+  - Users self-verify by responding to verification codes sent to their devices
+  - Application authenticates with services using app credentials (one-time setup)
+  - No user OAuth tokens, no token management complexity
+- **MCP Architecture Decision:** Using Model Context Protocol servers for channel implementations
+  - Each channel (Alexa, Slack, Discord) will be a separate MCP server
+  - Language independence (Python for Alexa SDK, Node for Discord, etc.)
+  - Estimated ~3-4 hours per channel MCP
+  - mcpTaiga experience makes this achievable
 - PublisherList is the key entity - users subscribe to lists, not publishers
 - Follow the three-layer structure: Domain → Application → Infrastructure
+- **CRITICAL:** Always read workflow documentation at session start:
+  - `~/Documents/developer/AI assistance/a_workflow_to_work_with_warp/WARP AI BEHAVIOUR GUIDE/`
+  - Especially `05_TAIGA_INTEGRATION.md` for GitHub-Taiga commit syntax
+- **Taiga Workflow:** Use `TG-123 #closed` syntax in commits for automatic task updates
 - Update this file after major milestones
+
+## 📅 **Recent Session Notes**
+
+**October 8, 2025:**
+- ✅ Added Taiga integration documentation to workflow system
+- ✅ Created `05_TAIGA_INTEGRATION.md` with GitHub-Taiga commit syntax
+- ✅ Decided to use MCP architecture for channel implementations
+- 📋 Tomorrow: Plan Feature 1 (Hexagonal + MCPs) and Feature 2 (Authentication model)
 
 ---
 
