@@ -1,6 +1,6 @@
 {
-  "build": { "builder": "nixpacks" },
+  "build": { "builder": "dockerfile", "path": ".railway/Dockerfile" },
   "deploy": {
-    "startCommand": "bash .railway/init.sh && bash .railway/start.sh"
+    "startCommand": "bash .railway/init.sh"
   }
 }
