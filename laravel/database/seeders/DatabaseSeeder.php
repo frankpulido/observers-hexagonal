@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace Database\Seeders;
 
+use App\Models\ServiceChannel;
 use App\Models\User;
 use Dflydev\DotAccessData\Data;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -31,6 +32,10 @@ class DatabaseSeeder extends Seeder
         ]);
         
         User::factory()->count(10)->create();
+
+        ServiceChannel::create(['name' => 'alexa']);
+        ServiceChannel::create(['name' => 'discord']);
+        ServiceChannel::create(['name' => 'home_assistant']);
 
         $this->call([
             PublisherSeeder::class,
