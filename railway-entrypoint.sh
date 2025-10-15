@@ -1,5 +1,3 @@
-Guess that the last line is no longer necessary :
-
 #!/bin/sh
 set -e
 
