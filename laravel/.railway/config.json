@@ -1,6 +1,0 @@
-{
-  "build": { "builder": "dockerfile", "path": "laravel/Dockerfile" },
-  "deploy": {
-    "startCommand": "bash .railway/start.sh"
-  }
-}
