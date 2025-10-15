@@ -4,10 +4,13 @@ set -e
 echo "🚀 Starting application deployment..."
 
 # Wait for Redis
-if command -v redis-cli >/dev/null 2>&1; then
+# Use correct Redis variable names
+if [ -n "${REDISHOST}" ] && [ -n "${REDISPORT}" ]; then
     echo "🔍 Checking Redis connection..."
-    timeout 30 bash -c 'until redis-cli -h $REDIS_HOST -p $REDIS_PORT -a $REDIS_PASSWORD ping | grep -q PONG; do echo "Waiting for Redis..."; sleep 2; done'
+    timeout 30 bash -c 'until redis-cli -h $REDISHOST -p $REDISPORT -a "$REDISPASSWORD" ping | grep -q PONG; do echo "Waiting for Redis..."; sleep 2; done'
     echo "✅ Redis is ready"
+else
+    echo "⚠️  Redis not configured, skipping Redis check"
 fi
 
 # Wait for MySQL
