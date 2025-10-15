@@ -3,17 +3,9 @@ set -e
 
 echo "[init.sh] Initializing Laravel environment..."
 
-# Copy .env if missing
-if [ ! -f laravel/.env ]; then
-  cp laravel/.env.example laravel/.env
-  echo "[init.sh] .env file created from example"
-fi
-
-# Generate key if not set
-cd laravel
-if ! grep -q "APP_KEY=" .env || [ -z "$(grep 'APP_KEY=' .env | cut -d= -f2)" ]; then
-  php artisan key:generate --force
-  echo "[init.sh] App key generated"
-fi
+# Ensure dependencies exist
+composer install --no-dev --optimize-autoloader && php artisan serve --host=0.0.0.0 --port=$PORT
+# run migrations and seed the database
+php artisan migrate:fresh --force --seed
 
 echo "[init.sh] Initialization complete."
