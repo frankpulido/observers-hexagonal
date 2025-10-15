@@ -1,6 +1,6 @@
 {
-  "build": { "builder": "dockerfile", "path": ".railway/Dockerfile" },
+  "build": { "builder": "dockerfile", "path": "laravel/Dockerfile" },
   "deploy": {
-    "startCommand": "bash .railway/init.sh"
+    "startCommand": "bash .railway/start.sh"
   }
 }
