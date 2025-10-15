@@ -3,8 +3,12 @@ set -e
 
 echo "🚀 Starting application deployment..."
 
+# Simple MySQL connectivity check (without checking for tables)
+echo "🔍 Checking MySQL connectivity..."
+timeout 30 bash -c 'until php -r "new PDO(\"mysql:host=\".getenv(\"DB_HOST\").\";port=\".getenv(\"DB_PORT\").\", getenv(\"DB_USERNAME\"), getenv(\"DB_PASSWORD\"));" 2>/dev/null; do echo "Waiting for database..."; sleep 2; done'
+echo "✅ Database is reachable"
+
 # Wait for Redis
-# Use correct Redis variable names
 if [ -n "${REDISHOST}" ] && [ -n "${REDISPORT}" ]; then
     echo "🔍 Checking Redis connection..."
     timeout 30 bash -c 'until redis-cli -h $REDISHOST -p $REDISPORT -a "$REDISPASSWORD" ping | grep -q PONG; do echo "Waiting for Redis..."; sleep 2; done'
@@ -12,11 +16,6 @@ if [ -n "${REDISHOST}" ] && [ -n "${REDISPORT}" ]; then
 else
     echo "⚠️  Redis not configured, skipping Redis check"
 fi
-
-# Wait for MySQL
-echo "🔍 Checking MySQL connection..."
-timeout 30 bash -c 'until php artisan db:monitor > /dev/null 2>&1; do echo "Waiting for database connection..."; sleep 2; done'
-echo "✅ Database is ready"
 
 # Generate key only if not set or is the default null value
 if [ -z "${APP_KEY}" ] || [ "${APP_KEY}" = "base64:null" ]; then
