@@ -34,16 +34,12 @@ RUN composer dump-autoload --optimize \
     && chown -R www-data:www-data storage bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache
 
-# Create non-root user
+# Copy entrypoint to standard system location
+COPY railway-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/railway-entrypoint.sh
+
+# Create and switch to non-root user
 RUN adduser -D -u 1000 -g www-data www-user
-
-# Copy entrypoint to user's home directory
-COPY railway-entrypoint.sh /home/www-user/
-RUN chmod +x /home/www-user/railway-entrypoint.sh
-
-# Switch to non-root user
 USER www-user
 
-EXPOSE 8000
-
-CMD ["/home/www-user/railway-entrypoint.sh"]
+CMD ["railway-entrypoint.sh"]
