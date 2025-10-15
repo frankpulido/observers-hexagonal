@@ -1,7 +1,6 @@
 [build]
 builder = "dockerfile"
 dockerfile = "Dockerfile.backend"
-watchPatterns = ["laravel/**"]
 
 [deploy]
 startCommand = "./railway-entrypoint.sh"
