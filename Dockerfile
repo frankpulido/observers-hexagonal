@@ -18,9 +18,6 @@ RUN apk add --no-cache \
     php82-pecl-redis && \
     docker-php-ext-install pdo pdo_mysql zip gd opcache
 
-# The Redis extension is already installed and enabled by the package
-# NO pecl install needed!
-
 # Copy Composer from official image
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
@@ -39,11 +36,14 @@ RUN composer dump-autoload --optimize \
 
 # Create non-root user
 RUN adduser -D -u 1000 -g www-data www-user
+
+# Copy entrypoint to user's home directory
+COPY railway-entrypoint.sh /home/www-user/
+RUN chmod +x /home/www-user/railway-entrypoint.sh
+
+# Switch to non-root user
 USER www-user
 
 EXPOSE 8000
 
-COPY railway-entrypoint.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/railway-entrypoint.sh
-
-CMD ["railway-entrypoint.sh"]
+CMD ["/home/www-user/railway-entrypoint.sh"]
