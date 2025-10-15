@@ -15,8 +15,8 @@ RUN apk add --no-cache \
     libpng-dev \
     oniguruma-dev \
     redis \
-    php82-pecl-redis \  # ← Alpine Redis package
-    && docker-php-ext-install pdo pdo_mysql zip gd opcache
+    php82-pecl-redis && \
+    docker-php-ext-install pdo pdo_mysql zip gd opcache
 
 # The Redis extension is already installed and enabled by the package
 # NO pecl install needed!
