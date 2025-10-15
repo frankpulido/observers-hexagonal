@@ -11,7 +11,7 @@ echo "🔧 Testing routes..."
 php artisan route:list
 
 echo "🏁 Starting PHP server..."
-exec php artisan serve --host=0.0.0.0 --port=$PORT
+exec php artisan serve --host=0.0.0.0 --port=$PORT &
 
 
 # Simple MySQL connectivity check (without checking for tables)
@@ -44,4 +44,10 @@ php artisan view:cache
 echo "🔄 Running database migrations..."
 php artisan migrate --force
 
+echo "🌱 Seeding database..."
+php artisan db:seed --force
+
 echo "✅ Application is ready!"
+
+# Keep the container alive
+wait
