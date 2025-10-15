@@ -1,6 +1,6 @@
 [build]
 builder = "dockerfile"
-dockerfile = "Dockerfile"
+dockerfile = "DockerfileBack"
 
 [deploy]
 startCommand = "railway-entrypoint.sh"
@@ -53,13 +53,13 @@ source = "react"
 
 [services.build]
 builder = "dockerfile" 
-dockerfile = "Dockerfile.frontend"
+dockerfile = "DockerfileFront"
 
 [services.deploy]
-startCommand = "npm run start -- --host 0.0.0.0 --port $PORT"
+startCommand = "serve -s dist -l $PORT"
 
 [services.ports]
-web.port = 3000
+web.port = 5173
 
 [services.env]
 VITE_API_URL = "https://observers-hexagonal-production-99d3.up.railway.app"

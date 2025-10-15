@@ -11,7 +11,7 @@ COPY react/ ./
 RUN npm run build
 
 # Production stage
-FROM node:18-alpine AS production
+FROM node:18-alpine AS productio
 WORKDIR /app
 
 # Install serve to run the built app
@@ -21,6 +21,5 @@ COPY --from=builder /app/dist ./dist
 
 USER node
 
-EXPOSE 3000
-
-CMD ["serve", "-s", "dist", "-l", "3000"]
+# Use Railway's dynamic PORT
+CMD ["serve", "-s", "dist", "-l", "$PORT"]
