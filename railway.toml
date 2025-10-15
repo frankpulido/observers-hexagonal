@@ -1,0 +1,4 @@
+[build]
+builder = "dockerfile"
+dockerfile = "laravel/Dockerfile"  # your Dockerfile relative path
+context = "."
