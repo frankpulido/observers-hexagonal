@@ -1,3 +1,26 @@
-FROM node:20-alpine
+# File used for Railway deployment - production
+# Multi-stage build for React
+FROM node:18-alpine AS builder
 WORKDIR /app
-EXPOSE 5173
+
+# Copy package files
+COPY react/package.json react/package-lock.json ./
+RUN npm ci --silent
+
+# Copy source and build
+COPY react/ ./
+RUN npm run build
+
+# Production stage
+FROM node:18-alpine AS productio
+WORKDIR /app
+
+# Install serve to run the built app
+RUN npm install -g serve
+
+COPY --from=builder /app/dist ./dist
+
+USER node
+
+# Use Railway's dynamic PORT
+CMD ["serve", "-s", "dist", "-l", "$PORT"]

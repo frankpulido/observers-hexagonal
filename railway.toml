@@ -1,6 +1,6 @@
 [build]
 builder = "dockerfile"
-dockerfile = "DockerfileBack"
+dockerfile = "Dockerfile"
 
 [deploy]
 startCommand = "railway-entrypoint.sh"
@@ -53,7 +53,7 @@ source = "react"
 
 [services.build]
 builder = "dockerfile" 
-dockerfile = "DockerfileFront"
+dockerfile = "Dockerfile"
 
 [services.deploy]
 startCommand = "serve -s dist -l $PORT"
