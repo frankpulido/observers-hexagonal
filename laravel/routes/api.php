@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SubscriberController;
 
 // Health check route
-Route::get('/api/health', function () {
+Route::get('/health', function () {
     return response()->json([
         'status' => 'OK',
         'timestamp' => now(),

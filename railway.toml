@@ -4,7 +4,7 @@ dockerfile = "Dockerfile"
 
 [deploy]
 startCommand = "railway-entrypoint.sh"
-healthcheckPath = "/health"
+healthcheckPath = "/api/health"
 healthcheckTimeout = 300
 
 # Environment Variables - Set non-secrets here, secrets in Railway dashboard
