@@ -1,4 +1,71 @@
 [build]
 builder = "dockerfile"
-dockerfile = "laravel/Dockerfile"  # Dockerfile relative path
-context = "."
+dockerfile = "Dockerfile.backend"
+watchPatterns = ["laravel/**"]
+
+[deploy]
+startCommand = "./railway-entrypoint.sh"
+healthcheckPath = "/health"
+healthcheckTimeout = 300
+
+# Environment Variables - Set non-secrets here, secrets in Railway dashboard
+[env]
+APP_NAME = "notifier"
+APP_ENV = "production"
+APP_DEBUG = "false"
+APP_URL = "https://observers-hexagonal-production-99d3.up.railway.app"
+APP_LOCALE = "en"
+APP_FALLBACK_LOCALE = "en"
+APP_FAKER_LOCALE = "en_US"
+APP_MAINTENANCE_DRIVER = "file"
+PHP_CLI_SERVER_WORKERS = "4"
+BCRYPT_ROUNDS = "12"
+LOG_CHANNEL = "stack"
+LOG_STACK = "single"
+LOG_DEPRECATIONS_CHANNEL = "null"
+LOG_LEVEL = "info" # Changed from debug for production
+SESSION_DRIVER = "redis"
+SESSION_LIFETIME = "120"
+SESSION_ENCRYPT = "false"
+FILESYSTEM_DISK = "local"
+QUEUE_CONNECTION = "redis"
+CACHE_STORE = "redis"
+CACHE_DRIVER = "redis"
+REDIS_CLIENT = "phpredis"
+MAIL_MAILER = "smtp"
+MAIL_SCHEME = "null"
+MAIL_HOST = "smtp.mailtrap.io"
+MAIL_PORT = "2525"
+MAIL_USERNAME = "null"
+MAIL_PASSWORD = "null"
+MAIL_FROM_ADDRESS = "hello@example.com"
+MAIL_FROM_NAME = "notifier"
+AWS_ACCESS_KEY_ID = "null"
+AWS_SECRET_ACCESS_KEY = "null"
+AWS_DEFAULT_REGION = "us-east-1"
+AWS_BUCKET = "null"
+AWS_USE_PATH_STYLE_ENDPOINT = "false"
+VITE_APP_NAME = "notifier"
+
+# Database & Redis connections will be auto-injected by Railway plugins
+# DB_HOST, DB_PORT, DB_DATABASE, DB_USERNAME, DB_PASSWORD
+# REDIS_HOST, REDIS_PASSWORD, REDIS_PORT
+
+# Frontend Service
+[[services]]
+name = "frontend"
+source = "react"
+watchPatterns = ["react/**"]
+
+[services.build]
+builder = "dockerfile" 
+dockerfile = "Dockerfile.frontend"
+
+[services.deploy]
+startCommand = "npm run start -- --host 0.0.0.0 --port $PORT"
+
+[services.ports]
+web.port = 3000
+
+[services.env]
+VITE_API_URL = "https://observers-hexagonal-production-99d3.up.railway.app"
