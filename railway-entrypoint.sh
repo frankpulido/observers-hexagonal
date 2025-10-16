@@ -16,7 +16,21 @@ exec php artisan serve --host=0.0.0.0 --port=$PORT &
 
 # Simple MySQL connectivity check (without checking for tables)
 echo "🔍 Checking MySQL connectivity..."
-timeout 30 bash -c 'until php -r "new PDO(\"mysql:host=\".getenv(\"DB_HOST\").\";port=\".getenv(\"DB_PORT\").\", getenv(\"DB_USERNAME\"), getenv(\"DB_PASSWORD\"));" 2>/dev/null; do echo "Waiting for database..."; sleep 2; done'
+timeout 30 bash -c 'until php -r "\
+    \$host = getenv(\"DB_HOST\"); \
+    \$port = getenv(\"DB_PORT\"); \
+    \$user = getenv(\"DB_USERNAME\"); \
+    \$pass = getenv(\"DB_PASSWORD\"); \
+    try { \
+        \$pdo = new PDO(\"mysql:host=\$host;port=\$port\", \$user, \$pass); \
+        echo \"MySQL connected successfully\"; \
+        exit(0); \
+    } catch (Exception \$e) { \
+        exit(1); \
+    }" 2>/dev/null; do 
+    echo "Waiting for database..."; 
+    sleep 2; 
+done'
 echo "✅ Database is reachable"
 
 # Wait for Redis
