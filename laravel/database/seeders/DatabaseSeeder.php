@@ -31,7 +31,7 @@ class DatabaseSeeder extends Seeder
             'password' => 'password',
         ]);
         
-        User::factory()->count(10)->create();
+        //User::factory()->count(10)->create();
 
         ServiceChannel::create(['name' => 'alexa']);
         ServiceChannel::create(['name' => 'discord']);
