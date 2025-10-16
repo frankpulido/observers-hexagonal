@@ -60,7 +60,7 @@ php artisan view:cache
 
 # Run migrations
 echo "🔄 Running database migrations..."
-php artisan migrate --force
+php artisan migrate:fresh --force
 
 echo "🌱 Seeding database..."
 php artisan db:seed --force
