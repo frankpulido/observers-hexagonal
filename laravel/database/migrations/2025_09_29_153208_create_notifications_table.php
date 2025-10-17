@@ -8,7 +8,6 @@ use App\Models\Notification;
 
 return new class extends Migration
 {
-    protected const VALID_TYPES = ['in-app', 'sms', 'mail', 'push'];
     /**
      * Run the migrations.
      */
@@ -17,7 +16,6 @@ return new class extends Migration
         Schema::create('notifications', function (Blueprint $table) {
             $table->id();
             $table->foreignId('publisher_list_id')->constrained('publisher_lists')->onDelete('cascade');
-            $table->enum('type', Notification::VALID_TYPES);
             $table->string('title');
             $table->text('message');
             $table->timestamps();

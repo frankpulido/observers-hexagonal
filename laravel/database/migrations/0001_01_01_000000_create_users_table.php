@@ -16,15 +16,14 @@ return new class extends Migration
             $table->id();
             $table->string('username')->unique();
             $table->string('password');
-            $table->string('email')->unique();
+            $table->string('email')->unique()->nullable();
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('mobile', 15)->unique();
+            $table->string('mobile', 15)->unique()->nullable();
             $table->boolean('is_superadmin')->default(false);
             $table->boolean('is_admin')->default(false);
             $table->boolean('is_publisher')->default(false);
             $table->boolean('is_subscriber')->default(false);
             $table->timestamp('mobile_verified_at')->nullable();
-            //$table->enum('role', User::VALID_ROLES)->nullable;
             $table->rememberToken();
             $table->timestamps();
         });

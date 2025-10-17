@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('subscriber_id')->constrained('subscribers')->onDelete('cascade');
             $table->foreignId('service_channel_id')->constrained('service_channels')->onDelete('cascade');
-            $table->unique(['subscriber_id', 'service_channel_id']);
+            $table->unique(['subscriber_id', 'service_channel_id'], 'sub_svc_chan_unique');
             $table->string('service_channel_username')->nullable();
             $table->string('verification_token')->nullable();
             $table->timestamp('verified_at')->nullable();
