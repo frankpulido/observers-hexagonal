@@ -5,7 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use \App\Observers\SubscriberObserver;
 
+#[ObservedBy(SubscriberObserver::class)]
 class Subscriber extends Model
 {
     use HasFactory;
