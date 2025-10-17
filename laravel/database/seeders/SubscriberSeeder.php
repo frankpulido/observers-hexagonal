@@ -14,11 +14,16 @@ class SubscriberSeeder extends Seeder
      */
     public function run(): void
     {
-        $users = User::where('role', 'subscriber')->get()->pluck('id')->toArray();
-        foreach ($users as $user) {
-            Subscriber::factory()->create([
-                'user_id' => $user,
-            ]);
+        for ($i = 1; $i <= 10; $i++) {
+            $user = User::factory()->create();
+            /*
+            $subscriber = new Subscriber();
+            $subscriber->user_id = $user->id;
+            $subscriber->is_active = true;
+            $subscriber->save();
+            */
+
+            // Activate a channel for the subscriber
         }
     }
 }

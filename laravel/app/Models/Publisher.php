@@ -41,4 +41,9 @@ class Publisher extends Model
     {
         return $this->hasMany(PublisherList::class);
     }
+
+    public function notifications()
+    {
+        return $this->hasManyThrough(Notification::class, PublisherList::class);
+    }
 }

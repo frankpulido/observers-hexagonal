@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class User extends Authenticatable
 {
-    public const VALID_ROLES = ['admin', 'publisher', 'subscriber'];
+    public const VALID_ROLES = ['superadmin', 'admin', 'publisher', 'subscriber'];
     protected $table = 'users';
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
@@ -22,10 +23,13 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'username',
+        'password',
         'email',
         'mobile',
-        'role',
-        'password',
+        'is_superadmin',
+        'is_admin',
+        'is_publisher',
+        'is_subscriber',
     ];
 
     /**
@@ -48,6 +52,40 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_superadmin' => 'boolean',
+            'is_admin' => 'boolean',
+            'is_publisher' => 'boolean',
+            'is_subscriber' => 'boolean',
         ];
+    }
+
+
+    public function username(): Attribute
+    {
+        return Attribute::make(
+            set: fn ($value) => strtolower(str_replace(' ', '', trim($value)))
+        );
+    }
+
+    public function email(): Attribute
+    {
+        return Attribute::make(
+            set: fn ($value) => strtolower(str_replace(' ', '', trim($value)))
+        );
+    }
+    
+    public function subscriber()
+    {
+        return $this->hasOne(Subscriber::class);
+    }
+
+    public function publisher()
+    {
+        return $this->hasOne(Publisher::class);
+    }
+
+    public function subscriptions()
+    {
+        return $this->hasManyThrough(Subscription::class, Subscriber::class);
     }
 }

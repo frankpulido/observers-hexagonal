@@ -43,6 +43,5 @@ class PublisherListSeeder extends Seeder
                 'is_private' => true,
             ]);
         }
-
     }
 }

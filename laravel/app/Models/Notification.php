@@ -12,12 +12,24 @@ use \App\Observers\NotificationObserver;
 class Notification extends Model
 {
     use HasFactory;
-    public const VALID_TYPES = ['in-app', 'sms', 'mail', 'push'];
+    //public const VALID_TYPES = ['in-app', 'sms', 'mail', 'push'];
     protected $table = 'notifications';
     protected $fillable = [
         'publisher_list_id',
-        'type' => 'string',
+        //'type' => 'string',
         'title' => 'string',
         'message' => 'text',
     ];
+
+    protected $casts = [
+        'publisher_list_id' => 'integer',
+        //'type' => 'string',
+        'title' => 'string',
+        'message' => 'string',
+    ];
+
+    public function publisherList()
+    {
+        return $this->belongsTo(PublisherList::class);
+    }
 }

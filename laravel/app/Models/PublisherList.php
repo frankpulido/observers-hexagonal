@@ -34,4 +34,9 @@ class PublisherList extends Model
     {
         return $this->hasMany(Subscription::class);
     }
+
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class);
+    }
 }

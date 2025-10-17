@@ -13,11 +13,13 @@ class Subscription extends Model
     protected $fillable = [
         'subscriber_id',
         'publisher_list_id',
+        'service_channel_id'
     ];
 
     protected $casts = [
         'subscriber_id' => 'integer',
         'publisher_list_id' => 'integer',
+        'service_channel_id' => 'integer',
     ];
 
     public function subscriber()
@@ -28,5 +30,10 @@ class Subscription extends Model
     public function publisherList()
     {
         return $this->belongsTo(PublisherList::class);
+    }
+
+    public function serviceChannel()
+    {
+        return $this->belongsTo(ServiceChannel::class);
     }
 }

@@ -15,15 +15,15 @@ return new class extends Migration
         Schema::create('subscribers', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->json('subscriber_channels');
-            $table->string('subscriber_email')->unique();
-            $table->string('subscriber_mobile')->unique();
-            $table->string('first_name');
-            $table->string('last_name');
-            $table->date('date_of_birth')->nullable();
-            $table->enum('gender', Subscriber::VALID_GENDERS)->nullable();
-            $table->string('city')->nullable();
-            $table->enum('occupation', Subscriber::VALID_OCCUPATIONS)->nullable();
+            //$table->json('subscriber_channels');
+            //$table->string('subscriber_email')->unique()->nullable();
+            //$table->string('subscriber_mobile')->unique()->nullable();
+            //$table->string('first_name');
+            //$table->string('last_name');
+            //$table->date('date_of_birth')->nullable();
+            //$table->enum('gender', Subscriber::VALID_GENDERS)->nullable();
+            ///$table->string('city')->nullable();
+            //$table->enum('occupation', Subscriber::VALID_OCCUPATIONS)->nullable();
             $table->boolean('is_active')->default(false);
             $table->timestamps();
         });

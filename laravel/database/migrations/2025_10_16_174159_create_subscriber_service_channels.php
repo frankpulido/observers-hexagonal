@@ -11,12 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('subscriptions', function (Blueprint $table) {
+        Schema::create('subscriber_service_channels', function (Blueprint $table) {
             $table->id();
             $table->foreignId('subscriber_id')->constrained('subscribers')->onDelete('cascade');
-            $table->foreignId('publisher_list_id')->constrained('publisher_lists')->onDelete('cascade');
-            $table->unique(['subscriber_id', 'publisher_list_id']);
             $table->foreignId('service_channel_id')->constrained('service_channels')->onDelete('cascade');
+            $table->unique(['subscriber_id', 'service_channel_id']);
+            $table->strint('service_channel_username')->nullable();
+            $table->boolean('is_active')->default(false);
             $table->timestamps();
         });
     }
@@ -26,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('subscriptions');
+        Schema::dropIfExists('subscriber_service_channels');
     }
 };

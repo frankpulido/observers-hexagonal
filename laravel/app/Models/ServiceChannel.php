@@ -13,4 +13,13 @@ class ServiceChannel extends Model
     protected $fillable = [
         'name'
     ];
+
+    protected $casts = [
+        'name' => 'string',
+    ];
+
+    public function subscriptions()
+    {
+        return $this->hasMany(Subscription::class);
+    }
 }

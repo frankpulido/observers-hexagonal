@@ -15,12 +15,16 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('username')->unique();
+            $table->string('password');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('mobile', 15)->unique();
+            $table->boolean('is_superadmin')->default(false);
+            $table->boolean('is_admin')->default(false);
+            $table->boolean('is_publisher')->default(false);
+            $table->boolean('is_subscriber')->default(false);
             $table->timestamp('mobile_verified_at')->nullable();
-            $table->enum('role', User::VALID_ROLES)->nullable;
-            $table->string('password');
+            //$table->enum('role', User::VALID_ROLES)->nullable;
             $table->rememberToken();
             $table->timestamps();
         });

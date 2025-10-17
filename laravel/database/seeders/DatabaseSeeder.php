@@ -16,18 +16,18 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         User::create([
-            'username' => 'frankpulido',
-            'email' => 'frankpulido@me.com',
-            'mobile' => '653343353',
-            'role' => 'publisher',
+            'username' => 'janedoe',
+            //'email' => 'frankpulido@me.com',
+            //'mobile' => '653343353',
+            //'role' => 'publisher',
             'password' => 'password',
         ]);
 
         User::create([
             'username' => 'johndoe',
-            'email' => 'johndoe@mail.com',
-            'mobile' => '654123456',
-            'role' => 'publisher',
+            //'email' => 'johndoe@mail.com',
+            //'mobile' => '654123456',
+            //'role' => 'publisher',
             'password' => 'password',
         ]);
         
@@ -36,6 +36,7 @@ class DatabaseSeeder extends Seeder
         ServiceChannel::create(['name' => 'alexa']);
         ServiceChannel::create(['name' => 'discord']);
         ServiceChannel::create(['name' => 'home_assistant']);
+        ServiceChannel::create(['name' => 'slack']);
 
         $this->call([
             PublisherSeeder::class,

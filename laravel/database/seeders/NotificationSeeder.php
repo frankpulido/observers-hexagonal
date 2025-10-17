@@ -8,7 +8,7 @@ use Illuminate\Database\Seeder;
 use App\Models\Subscriber;
 use App\Models\PublisherList;
 use App\Models\Notification;
-use Faker\Factory as FakerFactory;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 class NotificationSeeder extends Seeder
 {
@@ -17,17 +17,6 @@ class NotificationSeeder extends Seeder
      */
     public function run(): void
     {
-        $faker = FakerFactory::create();
-        $publisherListIds = PublisherList::all()->pluck('id')->toArray();
-        foreach($publisherListIds as $publisherListId){
-            $type = $faker->create()->randomElement(Notification::VALID_TYPES);
-            $message = $faker->create()->text(200);
-            Notification::create([
-                'publisher_list_id' => $publisherListId,
-                'type' => $type,
-                'title' => 'Notification for Publisher List ' . $publisherListId . ' by ' . $type,
-                'message' => $message
-            ]);
-        }
+        //
     }
 }
