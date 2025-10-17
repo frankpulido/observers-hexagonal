@@ -2,8 +2,9 @@
 declare(strict_types=1);
 namespace App\Observers;
 
-use App\Models\ServiceChannel;
+use App\Models\SubscriberServiceChannel;
 use App\Models\Subscriber;
+use App\Models\ServiceChannel;
 use Illuminate\Container\Attributes\DB;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
@@ -15,9 +16,13 @@ class ServiceChannelObserver implements ShouldHandleEventsAfterCommit
     public function created(ServiceChannel $serviceChannel): void
     {
         foreach (Subscriber::all() as $subscriber) {
-            ServiceChannel::create([
+            SubscriberServiceChannel::create([
                 'subscriber_id' => $subscriber->id,
                 'service_channel_id' => $serviceChannel->id,
+                'service_channel_username' => null,  // User provides it later
+                'verification_token' => null,
+                'verified_at' => null,
+                'is_active' => false,
             ]);
         }
     }
