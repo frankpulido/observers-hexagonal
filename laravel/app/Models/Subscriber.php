@@ -40,20 +40,13 @@ class Subscriber extends Model
         'is_active' => 'boolean',
     ];
 
-    /*
     protected static function boot()
     {
         parent::boot();
         static::creating(function ($subscriber) {
-            $subscriber->subscriber_channels = [];
-            $keys = ServiceChannel::all()->pluck('name')->toArray();
-            foreach ($keys as $key) {
-                $subscriber->subscriber_channels[$key] = false;
-            }
             $subscriber->is_active = false;
         });
     }
-    */
 
     public function user()
     {

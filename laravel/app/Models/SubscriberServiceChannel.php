@@ -21,6 +21,23 @@ class SubscriberServiceChannel extends Model
         'is_active',
     ];
 
+    protected $casts = [
+        'subscriber_id' => 'integer',
+        'service_channel_id' => 'integer',
+        'service_channel_username' => 'string',
+        'verification_token' => 'string',
+        'verified_at' => 'datetime',
+        'is_active' => 'boolean',
+    ];
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::creating(function ($subscriberServiceChannel) {
+            $subscriberServiceChannel->is_active = false;
+        });
+    }
+
     public function subscriber()
     {
         return $this->belongsTo(Subscriber::class);
