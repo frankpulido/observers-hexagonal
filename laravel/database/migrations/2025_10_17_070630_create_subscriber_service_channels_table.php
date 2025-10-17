@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -16,7 +16,9 @@ return new class extends Migration
             $table->foreignId('subscriber_id')->constrained('subscribers')->onDelete('cascade');
             $table->foreignId('service_channel_id')->constrained('service_channels')->onDelete('cascade');
             $table->unique(['subscriber_id', 'service_channel_id']);
-            $table->strint('service_channel_username')->nullable();
+            $table->string('service_channel_username')->nullable();
+            $table->string('verification_token')->nullable();
+            $table->timestamp('verified_at')->nullable();
             $table->boolean('is_active')->default(false);
             $table->timestamps();
         });

@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\ServiceChannel;
 
 class Subscriber extends Model
 {
@@ -64,5 +63,10 @@ class Subscriber extends Model
     public function subscriptions()
     {
         return $this->hasMany(Subscription::class);
+    }
+
+    public function subscriberServiceChannels()
+    {
+        return $this->hasMany(SubscriberServiceChannel::class);
     }
 }

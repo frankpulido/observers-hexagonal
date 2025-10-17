@@ -88,4 +88,9 @@ class User extends Authenticatable
     {
         return $this->hasManyThrough(Subscription::class, Subscriber::class);
     }
+
+    public function serviceChannels()
+    {
+        return $this->hasManyThrough(ServiceChannel::class, Subscription::class);
+    }
 }
