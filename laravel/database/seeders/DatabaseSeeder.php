@@ -15,6 +15,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        ServiceChannel::create(['name' => 'alexa']);
+        ServiceChannel::create(['name' => 'discord']);
+        ServiceChannel::create(['name' => 'home_assistant']);
+        ServiceChannel::create(['name' => 'slack']);
+        ServiceChannel::create(['name' => 'telegram']);
+
         User::create([
             'username' => 'janedoe',
             //'email' => 'frankpulido@me.com',
@@ -30,15 +36,6 @@ class DatabaseSeeder extends Seeder
             //'role' => 'publisher',
             'password' => 'password',
         ]);
-        
-        //User::factory()->count(10)->create();
-
-        ServiceChannel::create(['name' => 'alexa']);
-        ServiceChannel::create(['name' => 'discord']);
-        ServiceChannel::create(['name' => 'home_assistant']);
-        ServiceChannel::create(['name' => 'slack']);
-        ServiceChannel::create(['name' => 'telegram']);
-
 
         $this->call([
             PublisherSeeder::class,

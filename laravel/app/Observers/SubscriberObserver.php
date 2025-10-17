@@ -11,7 +11,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Events\ShouldHandleEventsAfterCommit;
 
-class SubscriberObserver
+class SubscriberObserver implements ShouldHandleEventsAfterCommit
 {
     public function created(Subscriber $subscriber): void
     {

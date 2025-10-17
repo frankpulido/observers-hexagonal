@@ -6,6 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\User;
 use App\Models\Subscriber;
+use App\Models\SubscriberServiceChannel;
 
 class SubscriberSeeder extends Seeder
 {
@@ -16,14 +17,11 @@ class SubscriberSeeder extends Seeder
     {
         for ($i = 1; $i <= 10; $i++) {
             $user = User::factory()->create();
-            /*
-            $subscriber = new Subscriber();
-            $subscriber->user_id = $user->id;
-            $subscriber->is_active = true;
-            $subscriber->save();
-            */
-
-            // Activate a channel for the subscriber
+        }
+        $subscriber_service_channels = SubscriberServiceChannel::all();
+        foreach ($subscriber_service_channels as $ssc) {
+            $ssc->is_active = random_int(0, 1) == 1 ? true : false;  // random boolean
+            $ssc->save();
         }
     }
 }
