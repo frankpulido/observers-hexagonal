@@ -37,6 +37,8 @@ class DatabaseSeeder extends Seeder
         ServiceChannel::create(['name' => 'discord']);
         ServiceChannel::create(['name' => 'home_assistant']);
         ServiceChannel::create(['name' => 'slack']);
+        ServiceChannel::create(['name' => 'telegram']);
+
 
         $this->call([
             PublisherSeeder::class,
