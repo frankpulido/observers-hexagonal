@@ -14,5 +14,6 @@ class NotificationObserver implements ShouldHandleEventsAfterCommit
     public function created(Notification $notification): void
     {
         // Logic to handle after a notification is created
+        // Silly line to force railway redeployment
     }
 }
