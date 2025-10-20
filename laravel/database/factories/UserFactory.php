@@ -23,7 +23,7 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'username' => $this->fake()->userName(),
+            'username' => fake()->userName(),
             //'email' => $this->faker->safeEmail(),
             //'email_verified_at' => now(),
             //'mobile' => $this->faker->numberBetween(600000000, 699999999),
