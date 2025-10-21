@@ -132,7 +132,7 @@ class DirectMessage {
 class DirectMessageLog extends Model {
     // Stores: sender_id, receiver_id, sent_at, status
     // NO title, NO message, NO channel_id
-    // Only metadata: who, when, delivered/failed
+    // Only metadata: who, when, status (true = delivered, false = failed)
 }
 ```
 
@@ -174,7 +174,7 @@ class DirectMessageLog extends Model {
 │  ────────────────────────────────────────────────────────  │
 │  Create: DirectMessageLog entry                             │
 │  → sender_id: Alice, receiver_id: Bob                      │
-│  → sent_at: now, status: delivered/failed                  │
+│  → sent_at: now, status: true (delivered) or false (failed)│
 │  → NO title, NO message, NO channel                         │
 │  → Used for rate limiting next message                      │
 └─────────────────────────────────────────────────────────────┘
@@ -234,10 +234,10 @@ CREATE TABLE authorized_senders (
 - Unique constraint prevents duplicate authorizations
 - Cascading deletes maintain referential integrity
 
-### **New Table: `direct_message_log`**
+### **New Table: `direct_message_logs`**
 
 ```sql
-CREATE TABLE direct_message_log (
+CREATE TABLE direct_message_logs (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     
     -- Who and when
@@ -246,7 +246,8 @@ CREATE TABLE direct_message_log (
     sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     
     -- Delivery status (for rate limiting & history)
-    status ENUM('delivered', 'failed') NOT NULL,
+    -- true = delivered, false = failed
+    status BOOLEAN DEFAULT FALSE NOT NULL,
     
     -- Constraints
     FOREIGN KEY (sender_id) REFERENCES subscribers(id) ON DELETE CASCADE,
@@ -264,7 +265,7 @@ CREATE TABLE direct_message_log (
 - ❌ No `channel_id` - not needed (lookup via `AuthorizedSender`)
 - ❌ No `failure_reason` - sender doesn't see details
 - ✅ Only metadata for rate limiting and delivery tracking
-- ✅ Simple `delivered`/`failed` status
+- ✅ Simple boolean status (true = delivered, false = failed)
 
 **Why no channel_id?**
 Receiver can dynamically query their chosen channel:
@@ -462,6 +463,7 @@ class LaravelAuthorizationRepository implements AuthorizationRepositoryInterface
 // Infrastructure/Laravel/Repositories/DirectMessageLogRepository.php
 class LaravelDirectMessageLogRepository implements DirectMessageLogRepositoryInterface {
     // Insert delivery logs (metadata only, no content)
+    // status: true = delivered, false = failed
 }
 
 // Infrastructure/Laravel/Controllers/DirectMessageController.php
@@ -666,12 +668,12 @@ class DirectMessageController {
     {
       "receiver_username": "alice",
       "sent_at": "2025-10-20T15:45:00Z",
-      "status": "delivered"
+      "status": true
     },
     {
       "receiver_username": "david",
       "sent_at": "2025-10-20T14:30:00Z",
-      "status": "failed"
+      "status": false
     }
   ],
   "received": [
@@ -705,7 +707,7 @@ class DirectMessageController {
 1. ✅ Authorized sender can send
 2. ✅ Unauthorized sender blocked
 3. ✅ Message delivered to correct channel
-4. ✅ Sender sees only success/failure
+4. ✅ Sender sees only success/failure (boolean status)
 5. ✅ Receiver sees channel used
 6. ✅ No message content stored
 
@@ -723,7 +725,7 @@ class DirectMessageController {
 - [x] One-way authorization model
 - [x] Single channel per sender-receiver pair
 - [x] Basic rate limiting (20/hour)
-- [x] Simple delivery status (delivered/failed)
+- [x] Simple boolean delivery status (true = delivered, false = failed)
 
 ### **Future Considerations (Phase 3+)**
 - [ ] **Message Templates** - Pre-defined message formats for common use cases
