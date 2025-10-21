@@ -79,8 +79,10 @@ mcp-servers/                        # Separate project
 The "microservices" (MCP servers) will essentially be **thin adapters** whose sole job is:
 
 1. Translate from our domain language → channel API specifics
-2. Call the channel's API (Alexa, Slack, Discord, WhatsApp, etc.)
+2. Call the channel's API (Alexa, Slack, Discord, Telegram, Home Assistant)
 3. Return success/failure status back to our core app
+
+**Note:** Implemented channels (Oct 17, 2025): Alexa, Discord, Home Assistant, Slack, Telegram
 
 ### Data Flow
 
@@ -133,5 +135,6 @@ The "microservices" (MCP servers) will essentially be **thin adapters** whose so
    - Retry logic in Laravel or MCP?
 
 4. **Database Schema:**
-   - Does `user_service_channels` table need MCP-specific config?
-   - Where is verification state stored?
+   - `subscriber_service_channels` table (implemented Oct 17) is MCP-ready
+   - Verification state stored in `verification_token`, `verified_at`, `is_active` columns
+   - No schema changes needed for MCP transition

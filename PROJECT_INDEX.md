@@ -1,6 +1,6 @@
 # 📑 Project Index - Observers-Hexagonal NOTIFIER
 
-**Last Updated:** October 7, 2025  
+**Last Updated:** October 20, 2025  
 **Purpose:** Complete file and directory reference for AI and developers  
 **Project Root:** `/Users/frankpulidoalvarez/Documents/developer/observers-hexagonal`
 
@@ -8,15 +8,19 @@
 
 ## 📚 **Documentation Files (Project Root)**
 
-| File                                | Size      | Purpose                          | Status             |
-|-------------------------------------|-----------|----------------------------------|--------------------|
-| `WARP.md`                           | 305 lines | AI-first project context         | ✅ Current         |
-| `PROJECT_ROADMAP.md`                | 370 lines | Development phases & planning    | ✅ Current         |
-| `PROJECT_INDEX.md`                  | This file | Complete project reference       | ✅ Current         |
-| `README.md`                         | 220 B.    | User documentation.              | 📋 Needs expansion |
-| `README_dev.md`                     | 14 KB     | Technical architecture deep dive | ✅ Current         |
-| `README_docker_stack.md`            | 1.6 KB.   | Docker configuration guide.      | ✅ Current         |
-| `PHASE_0_IMPLEMENTATION_SUMMARY.md` | 358 lines | Setup phase completion record    | ✅ Complete        |
+| File                                      | Size      | Purpose                                  | Status             |
+|-------------------------------------------|-----------|------------------------------------------|--------------------||
+| `WARP.md`                                 | 510 lines | AI-first project context (Oct 20)       | ✅ Current         |
+| `PROJECT_ROADMAP.md`                      | 420 lines | Development phases & planning (Oct 20)   | ✅ Current         |
+| `PROJECT_INDEX.md`                        | This file | Complete project reference               | ✅ Current         |
+| `PROJECT_EVOLUTION_ANALYSIS.md`           | 696 lines | Schema evolution rationale (Oct 20)      | ✅ Current         |
+| `README.md`                               | 220 B.    | User documentation                       | 📋 Needs expansion |
+| `README_dev.md`                           | 14 KB     | Technical architecture deep dive         | ✅ Current         |
+| `README_docker_stack.md`                  | 1.6 KB    | Docker configuration guide               | ✅ Current         |
+| `PHASE_0_IMPLEMENTATION_SUMMARY.md`       | 358 lines | Setup phase completion record            | ✅ Complete        |
+| `PHASE_1_REGISTRATION_FOUNDATION.md`      | 400 lines | Phase 1a implementation summary (Oct 17) | ✅ Complete        |
+| `DOCUMENT_INCONSISTENCIES_TO_RESOLVE.md`  | 600 lines | Documentation tracking (Oct 20)          | ✅ Active          |
+| `ARCHITECTURE_CHANNEL_SELECTION.md`       | 517 lines | Channel choice rationale (Oct 20)        | ✅ Complete        |
 
 **Documentation Strategy:** See `/Users/frankpulidoalvarez/Documents/developer/mcp-servers/mcpTAIGA/DOCUMENTATION_STRATEGY.md`
 
@@ -27,13 +31,18 @@
 ```
 observers-hexagonal/                                          # Project root
 ├── 📄 Documentation (root level)
-│   ├── WARP.md
-│   ├── PROJECT_ROADMAP.md
+│   ├── WARP.md (Oct 20 - Phase 1a complete)
+│   ├── PROJECT_ROADMAP.md (Oct 20 - Phase naming updated)
 │   ├── PROJECT_INDEX.md (this file)
+│   ├── PROJECT_EVOLUTION_ANALYSIS.md (Oct 20)
 │   ├── README.md
 │   ├── README_dev.md
 │   ├── README_docker_stack.md
-│   └── PHASE_0_IMPLEMENTATION_SUMMARY.md
+│   ├── PHASE_0_IMPLEMENTATION_SUMMARY.md
+│   ├── PHASE_1_REGISTRATION_FOUNDATION.md (Oct 17)
+│   ├── DOCUMENT_INCONSISTENCIES_TO_RESOLVE.md (Oct 20)
+│   ├── ARCHITECTURE_CHANNEL_SELECTION.md (Oct 20)
+│   └── docs/ (architecture deep-dives)
 │
 ├── 🐘 laravel/                                              # Docker container for Laravel
 │   ├── app/                                                 # Laravel framework (existing)
@@ -42,13 +51,18 @@ observers-hexagonal/                                          # Project root
 │   │   │       ├── Controller.php
 │   │   │       └── SubscriberController.php
 │   │   ├── Models/                                          # Existing models (become adapters)
-│   │   │   ├── User.php
+│   │   │   ├── User.php (#[ObservedBy(UserObserver::class)])
 │   │   │   ├── Publisher.php
 │   │   │   ├── PublisherList.php
-│   │   │   ├── Subscriber.php
+│   │   │   ├── Subscriber.php (#[ObservedBy(SubscriberObserver::class)])
 │   │   │   ├── Subscription.php
-│   │   │   └── Notification.php
-│   │   ├── Observers/
+│   │   │   ├── Notification.php
+│   │   │   ├── ServiceChannel.php (#[ObservedBy(ServiceChannelObserver::class)]) ✅ Oct 17
+│   │   │   └── SubscriberServiceChannel.php (full model, not pivot) ✅ Oct 17
+│   │   ├── Observers/                                       # ✅ Oct 17 - Infrastructure automation
+│   │   │   ├── UserObserver.php (creates Subscriber)
+│   │   │   ├── SubscriberObserver.php (creates SubscriberServiceChannels)
+│   │   │   ├── ServiceChannelObserver.php (creates SubscriberServiceChannels)
 │   │   │   └── NotificationObserver.php
 │   │   └── Providers/
 │   │       └── AppServiceProvider.php
