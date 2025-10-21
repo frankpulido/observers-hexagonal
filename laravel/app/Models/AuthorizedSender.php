@@ -21,17 +21,17 @@ class AuthorizedSender extends Model
         'subscriber_service_channel_id' => 'integer',
     ];
 
-    protected function receiver()
+    public function receiver()
     {
         return $this->belongsTo(Subscriber::class, 'receiver_id');
     }
 
-    protected function sender()
+    public function sender()
     {
         return $this->belongsTo(Subscriber::class, 'sender_id');
     }
 
-    protected function subscriberServiceChannel()
+    public function subscriberServiceChannel()
     {
         return $this->belongsTo(SubscriberServiceChannel::class, 'subscriber_service_channel_id');
     }
