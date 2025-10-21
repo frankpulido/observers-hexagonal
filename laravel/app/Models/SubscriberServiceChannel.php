@@ -47,4 +47,9 @@ class SubscriberServiceChannel extends Model
     {
         return $this->belongsTo(ServiceChannel::class);
     }
+
+    public function authorizedSenders()
+    {
+        return $this->hasMany(AuthorizedSender::class, 'service_channel_id', 'service_channel_id');
+    }
 }
