@@ -68,6 +68,13 @@ class Subscriber extends Model
 
     public function authorizedSenders()
     {
-        return $this->hasMany(AuthorizedSender::class);
+        return $this->hasMany(AuthorizedSender::class, 'receiver_id');
+    }
+
+    public function hasAuthorized(Subscriber $sender): bool
+    {
+        return $this->authorizedSenders()
+            ->where('sender_id', $sender->id)
+            ->exists();
     }
 }
