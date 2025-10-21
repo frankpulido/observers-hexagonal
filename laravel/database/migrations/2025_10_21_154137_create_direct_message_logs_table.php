@@ -15,8 +15,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('receiver_id')->constrained('subscribers')->onDelete('cascade');
             $table->foreignId('sender_id')->constrained('subscribers')->onDelete('cascade');
-            $table->timestamp('sent_at');
-            $table->boolean('status');
+            $table->timestamp('sent_at')->useCurrent();
+            $table->boolean('status')->default(false);
+            $table->timestamps();
         });
     }
 
