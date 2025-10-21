@@ -77,4 +77,14 @@ class Subscriber extends Model
             ->where('sender_id', $sender->id)
             ->exists();
     }
+
+    public function sentMessages()
+    {
+        return $this->hasMany(DirectMessageLog::class, 'sender_id');
+    }
+
+    public function receivedMessages()
+    {
+        return $this->hasMany(DirectMessageLog::class, 'receiver_id');
+    }
 }

@@ -1,15 +1,16 @@
 # 📨 Feature: Subscriber-to-Subscriber Direct Messaging
 
-**Status:** Design Phase  
+**Status:** Implementation Phase  
 **Created:** October 20, 2025  
-**Last Updated:** October 20, 2025  
-**Priority:** Phase 2 Feature
+**Last Updated:** October 21, 2025  
+**Priority:** Phase 2 Feature  
+**Implementation Status:** AuthorizedSender model complete ✅
 
 ---
 
 ## 🎯 Feature Overview
 
-Enable subscribers to send direct messages to each other through their preferred notification channels (Alexa, Telegram, Discord, Slack) with a **privacy-first, receiver-controlled authorization model**.
+Enable subscribers to send direct messages to each other through the receivers' preferred notification channels (Alexa, Telegram, Discord, Slack) with a **privacy-first, receiver-controlled authorization model**.
 
 ### **Core Principles**
 
@@ -67,6 +68,128 @@ Enable subscribers to send direct messages to each other through their preferred
 - Clicks `[Remove]`
 - Authorization deleted
 - Future messages from Alice rejected
+
+---
+
+## 🏗️ Three-Model Architecture
+
+The direct messaging system uses **three distinct models** that work together:
+
+### **1. AuthorizedSender (SQL - Persistent)**
+**Purpose:** Authorization and channel configuration  
+**Stored:** MySQL database  
+**Lifespan:** Permanent (until revoked)
+
+```php
+class AuthorizedSender extends Model {
+    // Stores: receiver_id, sender_id, subscriber_service_channel_id
+    // Represents: "Bob authorizes Alice to send to him via his Telegram"
+}
+```
+
+**Relationships:**
+- `receiver()` → Subscriber who grants authorization
+- `sender()` → Subscriber being authorized
+- `subscriberServiceChannel()` → Receiver's chosen channel for THIS sender
+
+**Key Method:**
+```php
+$bob->hasAuthorized($alice); // Check if Bob authorized Alice
+```
+
+---
+
+### **2. DirectMessage (DTO/Value Object - Transient)**
+**Purpose:** Message content for delivery  
+**Stored:** Redis queue (temporary)  
+**Lifespan:** Ephemeral (discarded after delivery)
+
+```php
+class DirectMessage {
+    public string $title;
+    public string $message;
+    public int $senderId;
+    public int $receiverId;
+    // Lives in Redis, picked up by MCP for delivery
+    // NEVER stored in SQL
+}
+```
+
+**Flow:**
+1. User sends message → `DirectMessage` object created
+2. Message pushed to Redis queue
+3. MCP worker picks it up → delivers via channel
+4. Message content discarded
+
+---
+
+### **3. DirectMessageLog (SQL - Persistent)**
+**Purpose:** Delivery metadata for rate limiting & history  
+**Stored:** MySQL database  
+**Lifespan:** Permanent (audit trail)
+
+```php
+class DirectMessageLog extends Model {
+    // Stores: sender_id, receiver_id, sent_at, status
+    // NO title, NO message, NO channel_id
+    // Only metadata: who, when, delivered/failed
+}
+```
+
+**Privacy Design:**
+- ❌ No message content (ephemeral in Redis)
+- ❌ No channel_id (receiver looks it up via `AuthorizedSender`)
+- ✅ Only metadata for rate limiting (20/hour check)
+- ✅ Delivery status for user history (✓/✗)
+
+---
+
+## 🔄 How They Work Together
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  ALICE sends message to BOB                                 │
+│                                                              │
+│  Step 1: Check Authorization                                │
+│  ────────────────────────────────────────────────────────  │
+│  Query: AuthorizedSender                                    │
+│  → Does Bob have Alice in authorized_senders?              │
+│  → Get Bob's subscriber_service_channel_id for Alice       │
+│  ✅ YES: Continue    ❌ NO: Reject "Not authorized"         │
+│                                                              │
+│  Step 2: Check Rate Limit                                   │
+│  ────────────────────────────────────────────────────────  │
+│  Query: DirectMessageLog                                    │
+│  → Count Alice's messages to Bob in last hour              │
+│  ✅ < 20: Continue   ❌ ≥ 20: Reject "Rate limit exceeded"  │
+│                                                              │
+│  Step 3: Queue Message                                      │
+│  ────────────────────────────────────────────────────────  │
+│  Create: DirectMessage object                               │
+│  → Push to Redis queue with title + message + IDs          │
+│  → MCP worker picks up → delivers via Bob's Telegram       │
+│  → Message content discarded after delivery                 │
+│                                                              │
+│  Step 4: Log Metadata                                       │
+│  ────────────────────────────────────────────────────────  │
+│  Create: DirectMessageLog entry                             │
+│  → sender_id: Alice, receiver_id: Bob                      │
+│  → sent_at: now, status: delivered/failed                  │
+│  → NO title, NO message, NO channel                         │
+│  → Used for rate limiting next message                      │
+└─────────────────────────────────────────────────────────────┘
+```
+
+**Key Insight:** Channel lookup is performed dynamically:
+```php
+// Receiver can always see which channel was used:
+$authorization = AuthorizedSender::where('receiver_id', $bob->id)
+                                 ->where('sender_id', $alice->id)
+                                 ->first();
+$channel = $authorization->subscriberServiceChannel; // Bob's Telegram
+
+// Sender NEVER sees the channel (not stored in DirectMessageLog)
+```
 
 ---
 
@@ -136,11 +259,21 @@ CREATE TABLE direct_message_log (
 ```
 
 **Privacy Design:**
-- ❌ No `message_content` - never stored
-- ❌ No `channel_id` - sender doesn't see this
+- ❌ No `message_content` - never stored (ephemeral in Redis)
+- ❌ No `title` - never stored (ephemeral in Redis)
+- ❌ No `channel_id` - not needed (lookup via `AuthorizedSender`)
 - ❌ No `failure_reason` - sender doesn't see details
 - ✅ Only metadata for rate limiting and delivery tracking
 - ✅ Simple `delivered`/`failed` status
+
+**Why no channel_id?**
+Receiver can dynamically query their chosen channel:
+```php
+$authorization = $receiver->authorizedSenders()
+                          ->where('sender_id', $sender->id)
+                          ->first();
+$channel = $authorization->subscriberServiceChannel;
+```
 
 ---
 
@@ -236,11 +369,17 @@ class Authorization {
 }
 
 // Domain/DirectMessaging/ValueObjects/DirectMessage.php
+// This is a DTO/Value Object, NOT a database model
+// Lives in Redis queue temporarily, discarded after delivery
 class DirectMessage {
+    private string $title;
+    private string $message;
     private SubscriberId $senderId;
     private SubscriberId $receiverId;
-    private MessageContent $content;
-    private DateTimeImmutable $sentAt;
+    private DateTimeImmutable $createdAt;
+    
+    // Serialized to Redis → Picked up by MCP → Delivered → Discarded
+    // NEVER persisted to SQL
 }
 
 // Domain/DirectMessaging/Services/RateLimitService.php
