@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('receiver_id')->constrained('subscribers')->onDelete('cascade');
             $table->foreignId('sender_id')->constrained('subscribers')->onDelete('cascade');
-            $table->foreignId('service_channel_id')->constrained('service_channels')->onDelete('cascade');
+            $table->foreignId('subscriber_service_channel_id')->constrained('subscriber_service_channels')->onDelete('cascade');
             $table->unique(['receiver_id', 'sender_id'], 'unique_receiver_sender');
             $table->timestamps();
         });

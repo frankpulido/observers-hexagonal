@@ -50,6 +50,6 @@ class SubscriberServiceChannel extends Model
 
     public function authorizedSenders()
     {
-        return $this->hasMany(AuthorizedSender::class, 'service_channel_id', 'service_channel_id');
+        return $this->hasMany(AuthorizedSender::class, 'subscriber_service_channel_id');
     }
 }

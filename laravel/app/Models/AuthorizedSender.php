@@ -4,24 +4,21 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Laravel\Sanctum\HasApiTokens;
-use App\Models\Subscriber;
 
 class AuthorizedSender extends Model
 {
     use HasFactory;
-    use HasApiTokens;
     protected $table = 'authorized_senders';
     protected $fillable = [
         'receiver_id',
         'sender_id',
-        'service_channel_id',
+        'subscriber_service_channel_id',
     ];
 
     protected $casts = [
         'receiver_id' => 'integer',
         'sender_id' => 'integer',
-        'service_channel_id' => 'integer',
+        'subscriber_service_channel_id' => 'integer',
     ];
 
     protected function receiver()
@@ -34,8 +31,8 @@ class AuthorizedSender extends Model
         return $this->belongsTo(Subscriber::class, 'sender_id');
     }
 
-    protected function serviceChannel()
+    protected function subscriberServiceChannel()
     {
-        return $this->belongsTo(ServiceChannel::class);
+        return $this->belongsTo(SubscriberServiceChannel::class, 'subscriber_service_channel_id');
     }
 }
